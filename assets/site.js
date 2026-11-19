@@ -1,15 +1,20 @@
 (()=>{'use strict';
   const menu=document.querySelector('.menu-toggle');const nav=document.querySelector('.nav');
   if(menu&&nav){menu.addEventListener('click',()=>{const o=nav.classList.toggle('open');menu.setAttribute('aria-expanded',String(o));menu.textContent=o?'Close':'Menu'});nav.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{nav.classList.remove('open');menu.setAttribute('aria-expanded','false');menu.textContent='Menu'}));}
-  const form=document.getElementById('brief-form');const feedback=document.getElementById('copy-feedback');
-  if(form){form.addEventListener('submit',async(e)=>{e.preventDefault();const fd=new FormData(form);const task=(fd.get('task')||'').toString().trim();if(!task){feedback.textContent='Please describe the task first.';return}
-    const fmt=v=>String(v||'Not specified').trim()||'Not specified';const lines=['PROJECT REQUEST','Category: '+fmt(fd.get('category')),'What I need: '+task,'My budget: '+fmt(fd.get('budget')),'Desired delivery: '+fmt(fd.get('deadline')),'Files or reference links: '+fmt(fd.get('reference')),'Communication: text only','Note: pricing and availability must be confirmed before work starts.'];
-    const value=lines.join('\n');let ok=false;
-    try{if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(value);ok=true}}catch(_){ok=false}
-    if(!ok){const t=document.createElement('textarea');t.value=value;t.style.position='fixed';t.style.opacity='0';document.body.appendChild(t);t.select();try{ok=document.execCommand('copy')}catch(_){}t.remove()}
-    if(!ok){const output=document.getElementById('brief-output');output.hidden=false;output.value=value;output.select();feedback.textContent='Copy the selected text manually, then send it through the platform where you found this portfolio.'}
-    else feedback.textContent='Brief copied. Send it through the platform where you found this portfolio.';
-  });}
+  const form=document.getElementById('brief-form');const feedback=document.getElementById('copy-feedback');const contact='contact.digitalwork@proton.me';
+  if(form){
+    function buildBrief(){const fd=new FormData(form);const task=(fd.get('task')||'').toString().trim();if(task.length<8){feedback.textContent='Please describe the task (at least 8 characters).';return null}
+      const fmt=v=>String(v||'Not specified').trim()||'Not specified';
+      return ['PROJECT REQUEST','Category: '+fmt(fd.get('category')),'What I need: '+task,'My budget: '+fmt(fd.get('budget')),'Desired delivery: '+fmt(fd.get('deadline')),'Files or reference links: '+fmt(fd.get('reference')),'Communication: text only','Note: pricing and availability must be confirmed before work starts.'].join('\n');
+    }
+    async function copyBrief(value){let ok=false;try{if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(value);ok=true}}catch(_){}
+      if(!ok){const t=document.createElement('textarea');t.value=value;t.style.position='fixed';t.style.opacity='0';document.body.appendChild(t);t.select();try{ok=document.execCommand('copy')}catch(_){}t.remove()}
+      if(ok){feedback.textContent='Brief copied. Paste it into your message.';return}
+      const output=document.getElementById('brief-output');output.hidden=false;output.value=value;output.select();feedback.textContent='Copy the selected text manually.';
+    }
+    form.addEventListener('submit',e=>{e.preventDefault();const value=buildBrief();if(value===null)return;const subject=encodeURIComponent('Project enquiry — digital work');const body=encodeURIComponent(value);feedback.textContent='Your email app should open. Review the message and press Send there; nothing was sent automatically.';window.location.href='mailto:'+contact+'?subject='+subject+'&body='+body;});
+    const copy=document.getElementById('copy-brief');if(copy)copy.addEventListener('click',async()=>{const value=buildBrief();if(value!==null)await copyBrief(value)});
+  }
   const grid=document.getElementById('catalog-grid'),filterHost=document.getElementById('filter-bar'),search=document.getElementById('catalog-search'),count=document.getElementById('catalog-count');
   if(grid&&filterHost&&search&&count){
     let all=[],selected='All'; const pretty={'Files & Data':'Files & data','Code & Websites':'Code & websites','Design & Graphics':'Design & graphics','Writing & Research':'Writing & research','Video & Media':'Video & media','Downloads':'Downloads'};
