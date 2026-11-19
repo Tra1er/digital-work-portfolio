@@ -5,7 +5,7 @@
     "name": "CSV cleanup",
     "fromPrice": 3,
     "scope": "100 rows: duplicates, blank rows and simple text cleanup.",
-    "status": "Demo ready",
+    "status": "Sample preview",
     "demo": "csv-cleaner/index.html"
   },
   {
@@ -491,7 +491,7 @@
     "name": "SRT / VTT subtitle repair",
     "fromPrice": 4,
     "scope": "One file up to three minutes; numbering, offsets and syntax.",
-    "status": "Demo ready",
+    "status": "Sample preview",
     "demo": "subtitle-tool/index.html"
   },
   {
@@ -572,7 +572,7 @@
     "name": "CSV cleanup utility",
     "fromPrice": 4,
     "scope": "Original code and documentation; license/release package still pending.",
-    "status": "Not for sale yet",
+    "status": "Not for sale yet — sample only",
     "demo": "csv-cleaner/index.html"
   },
   {
@@ -608,7 +608,7 @@
     "name": "Caption / subtitle utility",
     "fromPrice": 4,
     "scope": "Browser utility with guide; packaging and license still pending.",
-    "status": "Not for sale yet",
+    "status": "Not for sale yet — sample only",
     "demo": "subtitle-tool/index.html"
   }
 ]
