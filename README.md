@@ -33,3 +33,8 @@ Semantic HTML, visible keyboard focus, contrast-conscious typography, reduced-mo
 
 ## Source
 Service ideas, demo names and status descriptions were adapted from the prior AI 20$ Back launch kit. This site intentionally uses a neutral identity rather than a new brand name.
+
+
+## Public demo policy (November 2026)
+
+The CSV and subtitle public paths now display fictional before-and-after samples only. They no longer take arbitrary uploads or export processed user files. This helps keep paid service offerings focused on custom processing, review and delivery rather than offering the entire service free. Earlier revisions of the JavaScript utilities remain accessible in public Git history; GitHub Pages is not suitable for protecting proprietary source code. For any actual private workflow, use a private repository or local offline code. Orders and payments are handled through https://ko-fi.com/digitalworks1 and confirmed individually.
