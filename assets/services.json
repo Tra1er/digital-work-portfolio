@@ -1,0 +1,614 @@
+[
+  {
+    "id": 1,
+    "category": "Files & Data",
+    "name": "CSV cleanup",
+    "fromPrice": 3,
+    "scope": "100 rows: duplicates, blank rows and simple text cleanup.",
+    "status": "Demo ready",
+    "demo": "csv-cleaner/index.html"
+  },
+  {
+    "id": 2,
+    "category": "Files & Data",
+    "name": "Excel / Sheets cleanup",
+    "fromPrice": 5,
+    "scope": "One small worksheet, consistent columns and duplicate checks.",
+    "status": "By request",
+    "demo": ""
+  },
+  {
+    "id": 3,
+    "category": "Files & Data",
+    "name": "PDF table to spreadsheet",
+    "fromPrice": 4,
+    "scope": "One clean, machine-readable table; complex scanned files quoted separately.",
+    "status": "By request",
+    "demo": ""
+  },
+  {
+    "id": 4,
+    "category": "Files & Data",
+    "name": "Document formatting",
+    "fromPrice": 4,
+    "scope": "Up to two pages with headings, margins and spacing.",
+    "status": "By request",
+    "demo": ""
+  },
+  {
+    "id": 5,
+    "category": "Files & Data",
+    "name": "CV / resume layout",
+    "fromPrice": 5,
+    "scope": "Polish or format a 1–2 page CV using details you provide.",
+    "status": "By request",
+    "demo": ""
+  },
+  {
+    "id": 6,
+    "category": "Files & Data",
+    "name": "Slide presentation",
+    "fromPrice": 8,
+    "scope": "Up to five simple editable slides from supplied content.",
+    "status": "By request",
+    "demo": ""
+  },
+  {
+    "id": 7,
+    "category": "Files & Data",
+    "name": "Merge & deduplicate lists",
+    "fromPrice": 5,
+    "scope": "Combine two small CSV or spreadsheet files with matching fields.",
+    "status": "By request",
+    "demo": ""
+  },
+  {
+    "id": 8,
+    "category": "Files & Data",
+    "name": "Spreadsheet formula repair",
+    "fromPrice": 4,
+    "scope": "One formula problem with a reproducible example.",
+    "status": "By request",
+    "demo": ""
+  },
+  {
+    "id": 9,
+    "category": "Files & Data",
+    "name": "Basic charts & dashboards",
+    "fromPrice": 9,
+    "scope": "Up to three charts based on a supplied spreadsheet.",
+    "status": "By request",
+    "demo": ""
+  },
+  {
+    "id": 10,
+    "category": "Files & Data",
+    "name": "CSV / JSON / XML conversion",
+    "fromPrice": 4,
+    "scope": "Convert one small data export with schema validation.",
+    "status": "By request",
+    "demo": ""
+  },
+  {
+    "id": 11,
+    "category": "Files & Data",
+    "name": "File renaming / sorting script",
+    "fromPrice": 7,
+    "scope": "Local utility for one predictable naming or sorting rule.",
+    "status": "By request",
+    "demo": ""
+  },
+  {
+    "id": 12,
+    "category": "Files & Data",
+    "name": "PDF assembly or splitting",
+    "fromPrice": 3,
+    "scope": "Merge, split or reorder a few supplied pages.",
+    "status": "By request",
+    "demo": ""
+  },
+  {
+    "id": 13,
+    "category": "Files & Data",
+    "name": "Simple budget or tracker",
+    "fromPrice": 7,
+    "scope": "One usable spreadsheet with editable formulas.",
+    "status": "By request",
+    "demo": ""
+  },
+  {
+    "id": 14,
+    "category": "Files & Data",
+    "name": "Table extraction & cleanup",
+    "fromPrice": 5,
+    "scope": "One table from readable source files into CSV or XLSX.",
+    "status": "By request",
+    "demo": ""
+  },
+  {
+    "id": 15,
+    "category": "Code & Websites",
+    "name": "HTML / CSS bug fix",
+    "fromPrice": 7,
+    "scope": "One reproducible styling or responsive layout issue.",
+    "status": "Demo ready",
+    "demo": "web-fixes/index.html"
+  },
+  {
+    "id": 16,
+    "category": "Code & Websites",
+    "name": "JavaScript bug fix",
+    "fromPrice": 9,
+    "scope": "One contained client-side JS issue; source access and reproduction required.",
+    "status": "By request",
+    "demo": ""
+  },
+  {
+    "id": 17,
+    "category": "Code & Websites",
+    "name": "Simple Python utility",
+    "fromPrice": 10,
+    "scope": "One local file-processing or conversion script with instructions.",
+    "status": "By request",
+    "demo": ""
+  },
+  {
+    "id": 18,
+    "category": "Code & Websites",
+    "name": "Standalone web calculator",
+    "fromPrice": 12,
+    "scope": "One front-end calculator with defined fields and formulas.",
+    "status": "Demo ready",
+    "demo": "web-fixes/index.html"
+  },
+  {
+    "id": 19,
+    "category": "Code & Websites",
+    "name": "Landing page",
+    "fromPrice": 18,
+    "scope": "One responsive static page; text and assets supplied or scoped.",
+    "status": "By request",
+    "demo": ""
+  },
+  {
+    "id": 20,
+    "category": "Code & Websites",
+    "name": "Mobile layout adjustments",
+    "fromPrice": 8,
+    "scope": "One page and a limited set of viewport problems.",
+    "status": "Demo ready",
+    "demo": "web-fixes/index.html"
+  },
+  {
+    "id": 21,
+    "category": "Code & Websites",
+    "name": "Google Apps Script task",
+    "fromPrice": 10,
+    "scope": "One agreed Google Sheets workflow; permissions scoped before coding.",
+    "status": "By request",
+    "demo": ""
+  },
+  {
+    "id": 22,
+    "category": "Code & Websites",
+    "name": "Discord bot feature",
+    "fromPrice": 12,
+    "scope": "One small command for an existing bot; credentials never sent in chat.",
+    "status": "By request",
+    "demo": ""
+  },
+  {
+    "id": 23,
+    "category": "Code & Websites",
+    "name": "HTML email template",
+    "fromPrice": 8,
+    "scope": "One responsive promotional email with editable content.",
+    "status": "By request",
+    "demo": ""
+  },
+  {
+    "id": 24,
+    "category": "Code & Websites",
+    "name": "QR menu / info page",
+    "fromPrice": 12,
+    "scope": "One static mobile-friendly page and printable QR graphic.",
+    "status": "By request",
+    "demo": ""
+  },
+  {
+    "id": 25,
+    "category": "Code & Websites",
+    "name": "Code review & notes",
+    "fromPrice": 8,
+    "scope": "Review one small script and explain key issues.",
+    "status": "By request",
+    "demo": ""
+  },
+  {
+    "id": 26,
+    "category": "Code & Websites",
+    "name": "Browser extension prototype",
+    "fromPrice": 20,
+    "scope": "A limited local-only prototype; no publishing or privileged APIs promised.",
+    "status": "Quote first",
+    "demo": ""
+  },
+  {
+    "id": 27,
+    "category": "Code & Websites",
+    "name": "API / data integration script",
+    "fromPrice": 20,
+    "scope": "One clearly defined public API interaction; requires safe test environment.",
+    "status": "Quote first",
+    "demo": ""
+  },
+  {
+    "id": 28,
+    "category": "Code & Websites",
+    "name": "Automated text processing",
+    "fromPrice": 6,
+    "scope": "Small regex or parsing routine with examples and validation.",
+    "status": "By request",
+    "demo": ""
+  },
+  {
+    "id": 29,
+    "category": "Design & Graphics",
+    "name": "Photo background removal",
+    "fromPrice": 3,
+    "scope": "One image with a reasonably clear subject.",
+    "status": "By request",
+    "demo": ""
+  },
+  {
+    "id": 30,
+    "category": "Design & Graphics",
+    "name": "Photo cleanup or retouch",
+    "fromPrice": 5,
+    "scope": "One minor visual cleanup using supplied rights-cleared image.",
+    "status": "By request",
+    "demo": ""
+  },
+  {
+    "id": 31,
+    "category": "Design & Graphics",
+    "name": "YouTube thumbnail",
+    "fromPrice": 6,
+    "scope": "One original concept with title and source images provided.",
+    "status": "By request",
+    "demo": ""
+  },
+  {
+    "id": 32,
+    "category": "Design & Graphics",
+    "name": "Social media graphic",
+    "fromPrice": 5,
+    "scope": "One platform-sized post with client-supplied copy.",
+    "status": "By request",
+    "demo": ""
+  },
+  {
+    "id": 33,
+    "category": "Design & Graphics",
+    "name": "Banner / cover image",
+    "fromPrice": 5,
+    "scope": "One custom web or profile header.",
+    "status": "By request",
+    "demo": ""
+  },
+  {
+    "id": 34,
+    "category": "Design & Graphics",
+    "name": "Flyer / event poster",
+    "fromPrice": 7,
+    "scope": "One print- or web-ready layout from event details.",
+    "status": "By request",
+    "demo": ""
+  },
+  {
+    "id": 35,
+    "category": "Design & Graphics",
+    "name": "Invitation / announcement",
+    "fromPrice": 5,
+    "scope": "One original event announcement graphic.",
+    "status": "By request",
+    "demo": ""
+  },
+  {
+    "id": 36,
+    "category": "Design & Graphics",
+    "name": "Product mockup",
+    "fromPrice": 6,
+    "scope": "One digital product display image; source product image required.",
+    "status": "By request",
+    "demo": ""
+  },
+  {
+    "id": 37,
+    "category": "Design & Graphics",
+    "name": "Logo direction / concept",
+    "fromPrice": 8,
+    "scope": "One or two initial concepts, not a trademark-cleared brand identity.",
+    "status": "By request",
+    "demo": ""
+  },
+  {
+    "id": 38,
+    "category": "Design & Graphics",
+    "name": "Icon set",
+    "fromPrice": 8,
+    "scope": "Five coherent original simple icons.",
+    "status": "By request",
+    "demo": ""
+  },
+  {
+    "id": 39,
+    "category": "Design & Graphics",
+    "name": "Brand color mini guide",
+    "fromPrice": 7,
+    "scope": "Color palette, typography recommendations and a sample application.",
+    "status": "By request",
+    "demo": ""
+  },
+  {
+    "id": 40,
+    "category": "Design & Graphics",
+    "name": "Simple infographic",
+    "fromPrice": 8,
+    "scope": "One visual based on supplied and verifiable facts.",
+    "status": "By request",
+    "demo": ""
+  },
+  {
+    "id": 41,
+    "category": "Design & Graphics",
+    "name": "Animated stream screen customization",
+    "fromPrice": 7,
+    "scope": "Change a title, handle, palette or timing in an existing pack.",
+    "status": "Prototype ready",
+    "demo": ""
+  },
+  {
+    "id": 42,
+    "category": "Writing & Research",
+    "name": "Five product descriptions",
+    "fromPrice": 5,
+    "scope": "Five original short listings based on accurate product facts.",
+    "status": "By request",
+    "demo": ""
+  },
+  {
+    "id": 43,
+    "category": "Writing & Research",
+    "name": "Proofreading",
+    "fromPrice": 3,
+    "scope": "Up to 300 words; grammar, punctuation and clarity.",
+    "status": "By request",
+    "demo": ""
+  },
+  {
+    "id": 44,
+    "category": "Writing & Research",
+    "name": "Polish ↔ English translation",
+    "fromPrice": 5,
+    "scope": "Up to 250 words; standard non-certified content.",
+    "status": "By request",
+    "demo": ""
+  },
+  {
+    "id": 45,
+    "category": "Writing & Research",
+    "name": "Homepage headlines & copy",
+    "fromPrice": 6,
+    "scope": "One short homepage section with two headline options.",
+    "status": "By request",
+    "demo": ""
+  },
+  {
+    "id": 46,
+    "category": "Writing & Research",
+    "name": "Email or newsletter draft",
+    "fromPrice": 5,
+    "scope": "One email from your brief, with subject line and edit.",
+    "status": "By request",
+    "demo": ""
+  },
+  {
+    "id": 47,
+    "category": "Writing & Research",
+    "name": "Social media caption pack",
+    "fromPrice": 5,
+    "scope": "Five captions with suggested hooks and clear voice.",
+    "status": "By request",
+    "demo": ""
+  },
+  {
+    "id": 48,
+    "category": "Writing & Research",
+    "name": "Video script",
+    "fromPrice": 7,
+    "scope": "One short script up to 60 seconds of narration.",
+    "status": "By request",
+    "demo": ""
+  },
+  {
+    "id": 49,
+    "category": "Writing & Research",
+    "name": "FAQ / help text rewrite",
+    "fromPrice": 5,
+    "scope": "Up to six questions rewritten for clarity.",
+    "status": "By request",
+    "demo": ""
+  },
+  {
+    "id": 50,
+    "category": "Writing & Research",
+    "name": "SEO titles / meta descriptions",
+    "fromPrice": 4,
+    "scope": "Up to five page titles and descriptions; no ranking promises.",
+    "status": "By request",
+    "demo": ""
+  },
+  {
+    "id": 51,
+    "category": "Writing & Research",
+    "name": "Business research shortlist",
+    "fromPrice": 8,
+    "scope": "Up to 10 public business or product leads with cited evidence.",
+    "status": "By request",
+    "demo": ""
+  },
+  {
+    "id": 52,
+    "category": "Writing & Research",
+    "name": "Fact-checked research summary",
+    "fromPrice": 8,
+    "scope": "One short memo from credible sources with dated links.",
+    "status": "By request",
+    "demo": ""
+  },
+  {
+    "id": 53,
+    "category": "Writing & Research",
+    "name": "Blog post draft",
+    "fromPrice": 9,
+    "scope": "One 400–600 word original draft requiring client review.",
+    "status": "By request",
+    "demo": ""
+  },
+  {
+    "id": 54,
+    "category": "Writing & Research",
+    "name": "Store listing rewrite",
+    "fromPrice": 5,
+    "scope": "Improve three product listing titles, descriptions or bullets.",
+    "status": "By request",
+    "demo": ""
+  },
+  {
+    "id": 55,
+    "category": "Video & Media",
+    "name": "SRT / VTT subtitle repair",
+    "fromPrice": 4,
+    "scope": "One file up to three minutes; numbering, offsets and syntax.",
+    "status": "Demo ready",
+    "demo": "subtitle-tool/index.html"
+  },
+  {
+    "id": 56,
+    "category": "Video & Media",
+    "name": "Subtitle translation",
+    "fromPrice": 8,
+    "scope": "Translate captions for up to two minutes of provided source transcript.",
+    "status": "By request",
+    "demo": ""
+  },
+  {
+    "id": 57,
+    "category": "Video & Media",
+    "name": "YouTube chapters / timestamps",
+    "fromPrice": 4,
+    "scope": "Chapters for one short video from supplied source or transcript.",
+    "status": "By request",
+    "demo": ""
+  },
+  {
+    "id": 58,
+    "category": "Video & Media",
+    "name": "Transcript formatting",
+    "fromPrice": 5,
+    "scope": "Clean punctuation and formatting in an existing transcript.",
+    "status": "By request",
+    "demo": ""
+  },
+  {
+    "id": 59,
+    "category": "Video & Media",
+    "name": "Captioned social clip",
+    "fromPrice": 9,
+    "scope": "One 15–25 second clip from licensed footage; scope agreed in advance.",
+    "status": "Quote first",
+    "demo": ""
+  },
+  {
+    "id": 60,
+    "category": "Video & Media",
+    "name": "Silent product promo",
+    "fromPrice": 12,
+    "scope": "One short product promo using provided assets; music not included.",
+    "status": "Quote first",
+    "demo": ""
+  },
+  {
+    "id": 61,
+    "category": "Video & Media",
+    "name": "Animated text loop",
+    "fromPrice": 8,
+    "scope": "One simple motion-graphic title sequence with no sound.",
+    "status": "By request",
+    "demo": ""
+  },
+  {
+    "id": 62,
+    "category": "Video & Media",
+    "name": "Short-form video hook pack",
+    "fromPrice": 4,
+    "scope": "Five non-deceptive hook ideas for a specified audience.",
+    "status": "By request",
+    "demo": ""
+  },
+  {
+    "id": 63,
+    "category": "Downloads",
+    "name": "Animated Nightdrift overlay pack",
+    "fromPrice": 6,
+    "scope": "Original stream scenes; full OBS validation still required before selling.",
+    "status": "Not for sale yet",
+    "demo": ""
+  },
+  {
+    "id": 64,
+    "category": "Downloads",
+    "name": "CSV cleanup utility",
+    "fromPrice": 4,
+    "scope": "Original code and documentation; license/release package still pending.",
+    "status": "Not for sale yet",
+    "demo": "csv-cleaner/index.html"
+  },
+  {
+    "id": 65,
+    "category": "Downloads",
+    "name": "Website widget pack",
+    "fromPrice": 5,
+    "scope": "Reusable HTML/CSS/JS components; pack not built yet.",
+    "status": "Planned",
+    "demo": ""
+  },
+  {
+    "id": 66,
+    "category": "Downloads",
+    "name": "Spreadsheet tracker template",
+    "fromPrice": 3,
+    "scope": "Editable finance or project tracker; specific product not built yet.",
+    "status": "Planned",
+    "demo": ""
+  },
+  {
+    "id": 67,
+    "category": "Downloads",
+    "name": "Original study printables",
+    "fromPrice": 3,
+    "scope": "Original checklists and reference sheets; pack not built yet.",
+    "status": "Planned",
+    "demo": ""
+  },
+  {
+    "id": 68,
+    "category": "Downloads",
+    "name": "Caption / subtitle utility",
+    "fromPrice": 4,
+    "scope": "Browser utility with guide; packaging and license still pending.",
+    "status": "Not for sale yet",
+    "demo": "subtitle-tool/index.html"
+  }
+]
