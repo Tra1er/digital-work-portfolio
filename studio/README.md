@@ -8,7 +8,7 @@ Creator Lab is a mobile-first toolkit inside the existing Digital Works website,
 
 | Tool | What it does | External service? |
 | --- | --- | --- |
-| AI Image Studio (beta) | Text-to-image via Pollinations Classic guest endpoint, or account-authorized API | Yes: prompt sent to provider |
+| AI Image Studio (beta) | Text-to-image via FLUX.2 Klein 9B (quality) or 4B (fast) on Cloudflare Workers AI | Yes: prompt sent to Cloudflare Workers AI |
 | Prompt Composer | Composes detailed prompts with configurable inputs | No |
 | Photo Editor | Brightness, contrast, saturation, grayscale and PNG export | No |
 | Image Optimizer | Resize/export JPEG, PNG or WebP and show resulting size | No |
@@ -20,11 +20,10 @@ Creator Lab is a mobile-first toolkit inside the existing Digital Works website,
 
 ## AI caveats and safety
 
-- Anonymous image service is best-effort, third-party, not guaranteed free or available forever; it may fail or be rate-limited. We do not scrape restricted services or bypass access controls.
-- Authenticated Pollinations requests require user authorization and may consume user credits. The UI discloses this.
-- Current account login uses Pollinations PKCE authorization-code flow without an app identifier, documented as an optional identifier by the provider, but this still requires real-device verification. To enable developer earnings, configure a proper publishable App Key and matching redirect URI from Pollinations.
-- Never place a personal secret API key in GitHub, public JavaScript or URLs. The login flow only keeps user-authorized scoped credentials in sessionStorage; Disconnect clears them.
-- All uploaded images for local image and design tools stay in the browser; image-generation prompts go to Pollinations.
+- Image generation now uses a Cloudflare Worker backend and FLUX.2 Klein 9B (higher quality, fewer free generations) or Klein 4B (faster, more free generations). It requires deploying `cloudflare-worker/` and configuring Turnstile. Follow `cloudflare-worker/README.md`.
+- The browser sends prompts to our Cloudflare Worker, which calls Cloudflare Workers AI. Never put Cloudflare API tokens or Turnstile secrets in GitHub or public JavaScript.
+- The published free allowance is 10,000 Neurons/day across the account. At 1024×1024, current model pricing implies approximately 7 Klein 9B images or 96 Klein 4B images per day before other account usage. This is a pricing estimate, not a guarantee.
+- All uploaded images for local image and design tools stay in the browser; text prompts for AI generation are sent to Cloudflare.
 - No analytics scripts or ad scripts. Fonts do load from Google Fonts, a third party. System-font fallback works without them.
 - Check provider terms and functionality before promising availability or using paid advertising.
 
