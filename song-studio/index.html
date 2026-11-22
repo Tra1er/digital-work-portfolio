@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0e1018">
+<meta name="color-scheme" content="dark">
+<meta name="description" content="Song Studio by The Digital Works — create AI music, compare models and shape tracks in a browser-based multitrack workspace.">
+<meta property="og:title" content="Song Studio — The Digital Works">
+<meta property="og:description" content="From a musical idea to a track you can shape.">
+<meta property="og:type" content="website">
+<title>Song Studio — The Digital Works</title>
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="styles.css">
+<script>
+window.DW_TURNSTILE_SITE_KEY = "0x4AAAAAAGNc_zJsdu9NSbn8";
+window.onSongTurnstileLoad = function () {
+  function renderSongTurnstile() {
+    if (!window.turnstile || !window.DW_TURNSTILE_SITE_KEY) return;
+    var mount = document.querySelector("#turnstileMount");
+    if (!mount || window.__dwSongTurnstileWidget !== undefined) return;
+    window.__dwSongTurnstileWidget = window.turnstile.render(mount, {
+      sitekey: window.DW_TURNSTILE_SITE_KEY,
+      theme: "dark",
+      action: "music-generate",
+      callback: function (token) { window.__dwSongTurnstileToken = token; },
+      "expired-callback": function () { window.__dwSongTurnstileToken = ""; },
+      "error-callback": function () { window.__dwSongTurnstileToken = ""; },
+      "timeout-callback": function () { window.__dwSongTurnstileToken = ""; }
+    });
+  }
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", renderSongTurnstile, { once: true });
+  } else {
+    renderSongTurnstile();
+  }
+};
+</script>
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onSongTurnstileLoad&render=explicit" async defer></script>
+<script defer src="app.js"></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to Song Studio</a>
+<header class="topbar">
+  <a class="brand" href="../index.html"><span class="brand-mark">✳</span><span>digital works <small>SONG STUDIO</small></span></a>
+  <nav><a href="../index.html">Home</a><a href="../studio/">Creator Lab</a><a href="../products.html">Products</a></nav>
+  <span class="prototype-pill"><i></i> PRIVATE PROTOTYPE / 0.1</span>
+</header>
+<main id="main" class="shell">
+  <section class="intro">
+    <div>
+      <div class="eyebrow">THE DIGITAL WORKS / MUSIC LAB</div>
+      <h1>Make a song.<br><em>Then make it yours.</em></h1>
+      <p>Start with an idea, generate a full track, then bring audio into a hands-on workspace. This prototype keeps your imported audio in your browser.</p>
+    </div>
+    <div class="intro-status">
+      <span class="status-dot"></span>
+      <div><strong id="connectionTitle">Checking music providers</strong><small id="connectionText">Connecting to the private generation service…</small></div>
+    </div>
+  </section>
+
+  <section class="workbench">
+    <aside class="create-panel panel">
+      <div class="panel-heading"><div><span class="eyebrow">01 / COMPOSE</span><h2>Start with an idea</h2></div><span class="step-no">01</span></div>
+      <label class="field-label" for="provider">Generation model</label>
+      <select id="provider" class="control">
+        <option value="lyria">Google Lyria 3.5 · lower-cost test</option>
+        <option value="eleven">Eleven Music v2.5 · advanced composition</option>
+      </select>
+      <div class="provider-note" id="providerNote">Lyria 3.5 · $0.08 per full song · no free API tier</div>
+
+      <label class="field-label" for="prompt">Describe the sound</label>
+      <textarea id="prompt" class="control prompt-box" maxlength="3000" placeholder="Describe the genre, mood, instruments, vocal delivery, energy and production. Be specific.">Melancholic indie rock with natural, intimate male vocals, warm live drums, expressive electric guitars, melodic bass and a memorable emotional chorus. Organic studio recording, dynamic verses that open into a powerful final chorus. No synthetic-sounding vocals or generic stock backing.</textarea>
+      <div class="prompt-tools">
+        <button class="chip" type="button" data-prompt="A warm, intimate indie folk song with fingerpicked acoustic guitar, soft natural male vocals, subtle strings, brushed drums and bittersweet lyrics. Organic, close-mic recording.">Indie folk</button>
+        <button class="chip" type="button" data-prompt="A cinematic instrumental score with expressive piano, evolving strings, deep low-end, organic percussion and a gradual emotional crescendo. Wide, detailed orchestral production.">Cinematic</button>
+        <button class="chip" type="button" data-prompt="A forward-driving electronic track with punchy live-feeling drums, a distinctive bassline, layered analog synths, evolving arpeggios and a strong melodic hook. Detailed modern production.">Electronic</button>
+        <button class="chip" type="button" data-prompt="A vulnerable acoustic ballad with close, natural vocals, fingerpicked guitar, restrained piano, subtle room ambience and a powerful but understated final chorus.">Acoustic</button>
+      </div>
+
+      <div class="two-fields">
+        <div><label class="field-label" for="mode">Song type</label><select id="mode" class="control"><option value="vocals">Vocals + instruments</option><option value="instrumental">Instrumental only</option></select></div>
+        <div><label class="field-label" for="duration">Target length</label><select id="duration" class="control"><option value="30">30-second test</option><option value="60">About 1 minute</option><option value="120" selected>About 2 minutes</option><option value="180">About 3 minutes</option><option value="240">About 4 minutes</option></select></div>
+      </div>
+      <div class="range-head"><label class="field-label" for="bpm">Tempo direction</label><strong><span id="bpmValue">112</span> BPM</strong></div>
+      <input id="bpm" class="range" type="range" min="60" max="180" value="112">
+      <label class="field-label" for="lyrics">Lyrics <span class="optional">OPTIONAL</span></label>
+      <textarea id="lyrics" class="control lyrics-box" maxlength="5000" placeholder="Add your own lyrics, using headings such as [Verse 1], [Chorus] and [Bridge]. Leave blank to let the model write lyrics when vocals are selected."></textarea>
+      <div class="helper">For Eleven Music, section headings can become a structured composition plan. For Lyria, lyrics are passed as creative direction.</div>
+
+      <div class="divider"></div>
+      <div class="field-label">Private preview access</div>
+      <input id="previewKey" class="control" type="password" autocomplete="off" placeholder="Preview key — configured privately in Cloudflare">
+      <div class="turnstile-card"><div><strong>Quick human check</strong><p>Verification is required before a paid model can be called.</p></div><div id="turnstileMount"></div></div>
+      <label class="confirm-cost"><input id="costConfirm" type="checkbox"><span>I understand this test can use paid API credits. No generation will run without my confirmation.</span></label>
+      <button id="generateBtn" class="btn primary full" type="button" disabled><span>✦</span> Generate song</button>
+      <div id="generateStatus" class="status-message" role="status" aria-live="polite">Checking provider availability…</div>
+      <div class="privacy-note"><span>◇</span> API credentials stay on the server. Your imported audio files are processed locally in this browser.</div>
+    </aside>
+
+    <section class="studio-panel panel">
+      <div class="studio-head">
+        <div><span class="eyebrow">02 / ARRANGE & LISTEN</span><h2>Your workspace</h2><p>Generated tracks and imported audio appear here. No sample song is being passed off as AI output.</p></div>
+        <div class="studio-actions">
+          <label class="btn secondary" for="audioImport">＋ Import audio</label>
+          <input id="audioImport" type="file" accept="audio/*,.mp3,.wav,.m4a,.ogg,.flac" multiple hidden>
+          <button id="exportMix" class="btn secondary" type="button" disabled>Export mix</button>
+        </div>
+      </div>
+
+      <div class="model-cards">
+        <article class="model-card" id="lyriaCard"><div class="model-top"><span class="model-icon">G</span><span class="model-state" id="lyriaState">Checking</span></div><h3>Lyria 3.5</h3><p>Lower-cost full-song benchmark. $0.08 per generation, with no free API tier.</p><a href="https://ai.google.dev/gemini-api/docs/music-generation" target="_blank" rel="noopener">API documentation ↗</a></article>
+        <article class="model-card" id="elevenCard"><div class="model-top"><span class="model-icon">11</span><span class="model-state" id="elevenState">Checking</span></div><h3>Eleven Music v2.5</h3><p>Composition plans, section-aware structure, vocals and instrumental generation. Paid API access.</p><a href="https://elevenlabs.io/docs/overview/capabilities/music" target="_blank" rel="noopener">API documentation ↗</a></article>
+      </div>
+
+      <div class="player-card" id="playerCard">
+        <div class="player-empty" id="playerEmpty">
+          <div class="empty-orb">♫</div><h3>Your next track starts here.</h3><p>Generate a song once a provider is connected, or import audio to try the local multitrack workspace.</p>
+        </div>
+        <div class="player-ready" id="playerReady" hidden>
+          <div class="track-art">DW<span>♫</span></div>
+          <div class="player-meta"><span class="eyebrow" id="activeProvider">GENERATED TRACK</span><h3 id="activeTitle">Untitled composition</h3><p id="activeDetails">Audio preview</p></div>
+          <audio id="audioPlayer" controls preload="metadata"></audio>
+          <div class="player-download"><a id="downloadTrack" class="btn secondary" download="digital-works-song.mp3">Download audio</a></div>
+        </div>
+      </div>
+
+      <div class="timeline-head"><div><span class="eyebrow">03 / MULTITRACK</span><h3>Track editor</h3></div><span id="trackCount" class="track-count">0 TRACKS</span></div>
+      <div class="transport">
+        <div class="transport-buttons"><button id="playAll" type="button" aria-label="Play all tracks" disabled>▶</button><button id="pauseAll" type="button" aria-label="Pause all tracks" disabled>Ⅱ</button><button id="stopAll" type="button" aria-label="Stop all tracks" disabled>■</button></div>
+        <div class="transport-time"><strong id="currentTime">00:00</strong><span>/</span><span id="totalTime">00:00</span></div>
+        <input id="seek" class="seek" type="range" min="0" max="100" value="0" disabled aria-label="Seek timeline">
+        <span class="transport-label">LOCAL MIX</span>
+      </div>
+      <div id="trackList" class="track-list">
+        <div class="track-empty">No tracks yet. Import audio or generate your first composition.</div>
+      </div>
+      <div class="editor-foot"><span>LOCAL AUDIO ENGINE</span><span>Volume · mute · solo · synchronized playback · WAV export</span></div>
+
+      <div class="comparison">
+        <div><span class="eyebrow">04 / QUALITY TEST</span><h3>Compare the models fairly.</h3><p>Use the same prompt on both providers, then listen to the results side by side. Each generation is a separate paid request.</p></div>
+        <select id="benchmark" class="control">
+          <option value="indie">Natural indie rock · vocals</option>
+          <option value="cinematic">Cinematic instrumental</option>
+          <option value="electronic">Electronic · drums and bass</option>
+          <option value="acoustic">Emotional acoustic · vocals</option>
+        </select>
+        <button id="useBenchmark" class="btn secondary" type="button">Load benchmark prompt</button>
+      </div>
+    </section>
+  </section>
+
+  <section class="bottom-grid">
+    <article class="info-card"><span class="eyebrow">WHAT WORKS NOW</span><h3>A real local audio workspace</h3><p>Import MP3, WAV or other browser-supported audio, play tracks together, adjust volume, mute or solo parts, and export a WAV mix. Files stay in this browser session.</p></article>
+    <article class="info-card"><span class="eyebrow">WHAT IS LOCKED</span><h3>Paid generation is opt-in</h3><p>AI generation needs provider API credentials and a private preview key stored as Cloudflare Worker secrets. Public user quotas and accounts will be built before any public launch.</p></article>
+    <article class="info-card"><span class="eyebrow">NEXT MILESTONE</span><h3>Real stems and section editing</h3><p>After we hear real outputs, we'll decide whether to add stem separation, clip-level editing, section regeneration and project saving.</p></article>
+  </section>
+  <footer><a href="../index.html">← The Digital Works</a><span>SONG STUDIO / PROTOTYPE 0.1</span><a href="mailto:contact.digitalwork@proton.me?subject=Song%20Studio%20feedback">Send feedback ↗</a></footer>
+</main>
+</body>
+</html>
