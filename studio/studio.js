@@ -3,7 +3,7 @@
 'use strict';
 const $ = s => document.querySelector(s);
 const $$ = s => Array.from(document.querySelectorAll(s));
-const app = {token:sessionStorage.getItem('dw_polli_token')||'',imageUrl:'',imageBlob:null,editorImg:null,compImg:null,shapeSvg:''};
+const app = {token:sessionStorage.getItem('dw_polli_token')||'',imageUrl:'',imageBlob:null,editorImg:null,compImg:null,shapeSvg:'',paletteLoaded:false};
 const toolIds = ['image','prompt','editor','compress','palette','gradient','banner','shape','shadow'];
 function status(id,msg,type){let el=$('#'+id);if(!el)return;el.textContent=msg;el.className='status '+(type||'');}
 function toast(msg){const e=$('#toast');e.textContent=msg;e.classList.remove('hidden');clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.add('hidden'),3000);}
@@ -171,11 +171,11 @@ $('#paletteUpload').addEventListener('change',e=>openLocal(e.target,(im)=>{
  for(let i=0;i<data.length;i+=4){if(data[i+3]<120)continue;const r=Math.round(data[i]/32)*32,g=Math.round(data[i+1]/32)*32,b=Math.round(data[i+2]/32)*32;const key=[Math.min(255,r),Math.min(255,g),Math.min(255,b)].join(',');hist.set(key,(hist.get(key)||0)+1);}
  const shades=[...hist.entries()].sort((a,b)=>b[1]-a[1]).slice(0,5);
  if(!shades.length){status('paletteStatus','This image has no visible colors.','error');return;}
- const box=$('#swatches');box.replaceChildren();
+ const box=$('#swatches');box.replaceChildren();app.paletteLoaded=true;
  shades.forEach(([rgb])=>{const nums=rgb.split(',').map(Number),hex='#'+nums.map(n=>n.toString(16).padStart(2,'0')).join('').toUpperCase();const b=document.createElement('button');b.type='button';b.className='swatch';b.style.background=hex;b.style.color=(nums[0]*.299+nums[1]*.587+nums[2]*.114)>155?'#111':'#fff';b.textContent=hex;b.title='Copy '+hex;b.addEventListener('click',()=>copy(hex));box.appendChild(b);});
  status('paletteStatus','Palette extracted. Tap a swatch to copy its hex color.','ok');
 }));
-$('#paletteCopy').addEventListener('click',()=>{const all=$$('#swatches .swatch').map(x=>x.textContent);if(!all.length)return toast('Upload an image first.');copy(all.join(', '));});
+$('#paletteCopy').addEventListener('click',()=>{if(!app.paletteLoaded)return toast('Upload an image first.');const all=$('#swatches .swatch').map(x=>x.textContent);copy(all.join(', '));});
 
 /* CSS gradient */
 function drawGradient(){const a=$('#gradA').value,b=$('#gradB').value,angle=$('#gradAngle').value,css='linear-gradient('+angle+'deg, '+a+', '+b+')';$('#gradientBox').style.background=css;$('#gradientCode').textContent='background: '+css+';';$('#gradAngleOut').textContent=angle+'°';}
@@ -226,4 +226,14 @@ function drawShadow(){const x=$('#shadowX').value,y=$('#shadowY').value,blur=$('
 }
 ['shadowX','shadowY','shadowBlur','shadowSpread','shadowColor'].forEach(id=>$('#'+id).addEventListener('input',drawShadow));drawShadow();
 $('#shadowCopy').addEventListener('click',()=>copy($('#shadowCode').textContent));
+function paintPlaceholder(id,label){
+ const c=$('#'+id),ctx=c.getContext('2d'),w=c.width,h=c.height;
+ const grad=ctx.createLinearGradient(0,0,w,h);grad.addColorStop(0,'#36254d');grad.addColorStop(1,'#10101d');
+ ctx.fillStyle=grad;ctx.fillRect(0,0,w,h);
+ ctx.globalAlpha=.28;ctx.fillStyle='#e4b8fb';ctx.beginPath();ctx.arc(w*.70,h*.42,h*.38,0,7);ctx.fill();
+ ctx.fillStyle='#a790fe';ctx.beginPath();ctx.arc(w*.33,h*.78,h*.29,0,7);ctx.fill();ctx.globalAlpha=1;
+ ctx.fillStyle='#f0e0ff';ctx.font='600 23px sans-serif';ctx.textAlign='center';ctx.fillText(label,w/2,h/2+8);
+}
+paintPlaceholder('editorCanvas','Your photo here');
+paintPlaceholder('compressCanvas','Add an image to optimize');
 })();
