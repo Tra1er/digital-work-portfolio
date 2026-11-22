@@ -33,6 +33,7 @@ Creator Lab is a mobile-first toolkit inside the existing Digital Works website,
 - studio.css — responsive layout and mobile navigation
 - studio.js — tool implementations and integration
 - README.md — notes, QA, launch plan
+- `../cloudflare-worker/` — separate Worker API, Wrangler configuration and deployment guide
 
 The portfolio navigation links to the new studio folder. Existing GitHub Pages source is expected to publish it alongside the main website.
 
@@ -42,10 +43,10 @@ The portfolio navigation links to the new studio folder. Existing GitHub Pages s
 2. Upload and export an image in Photo Editor, Image Optimizer, and Palette Extractor.
 3. Copy a composed prompt, CSS gradient, SVG and shadow.
 4. Download a social banner and SVG shape.
-5. Test guest generation once and respect provider limits.
-6. Test account mode only with a user-authorized account, explicit consent and a tiny budget.
+5. Deploy `cloudflare-worker/` and configure Turnstile using its README.
+6. Test one Klein 9B image and one Klein 4B image; compare quality, latency and actual neuron usage.
 7. Confirm links to products, services and home work.
-8. Confirm GitHub Pages serves latest content. A successful GitHub commit is not a browser/production test.
+8. Confirm GitHub Pages and the Worker serve the latest commits. A successful GitHub commit is not a browser/production test.
 
 ## Realistic business path
 
