@@ -204,7 +204,8 @@ export default {
     const origin = request.headers.get("Origin");
     const url = new URL(request.url);
 
-    // A public, read-only health check is safe without CORS credentials.
+    // Read-only status endpoints are safe to open directly as well as from the site.
+    // They reveal only whether integrations are configured, never secret values.
     if (request.method === "GET" && url.pathname === "/health") {
       return new Response(JSON.stringify({
         ok: true,
@@ -218,14 +219,6 @@ export default {
       });
     }
 
-    if (origin !== ALLOWED_ORIGIN) {
-      return new Response("Forbidden origin", { status: 403 });
-    }
-
-    if (request.method === "OPTIONS") {
-      return new Response(null, { status: 204, headers: corsHeaders() });
-    }
-
     if (request.method === "GET" && url.pathname === "/api/music/status") {
       return json({
         providers: {
@@ -234,6 +227,14 @@ export default {
         },
         previewEnabled: Boolean(env.SONG_STUDIO_PREVIEW_KEY)
       });
+    }
+
+    if (origin !== ALLOWED_ORIGIN) {
+      return new Response("Forbidden origin", { status: 403 });
+    }
+
+    if (request.method === "OPTIONS") {
+      return new Response(null, { status: 204, headers: corsHeaders() });
     }
 
     if (request.method === "POST" && url.pathname === "/api/music/generate") {
