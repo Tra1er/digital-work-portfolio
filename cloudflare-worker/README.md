@@ -57,3 +57,37 @@ Workers AI currently includes 10,000 free Neurons per day. On the Workers Free p
 The free allowance is shared across Workers AI use on the account. The Worker does not promise unlimited generation. The configured rate limit is approximate and per Cloudflare location; Turnstile adds a server-verified human check. For a 1024×1024 output, current published pricing implies roughly 7 images/day with Klein 9B or roughly 96/day with Klein 4B, before other account usage. These are estimates, not guarantees. The hard Workers AI daily free allocation is the final limit on the Free plan.
 
 Do not publish or share account API tokens, Turnstile Secret Keys, or personal credentials. If a secret is accidentally exposed, rotate it in Cloudflare immediately.
+
+
+## Song Studio private preview
+
+The Worker also exposes private AI music generation routes for the Song Studio prototype.
+
+- Status route: `GET /api/music/status`
+- Generation route: `POST /api/music/generate`
+- Providers: Google Lyria 3.5 and Eleven Music v2.5
+- Separate music rate limit: 2 requests per minute per source IP (approximate, per Cloudflare location)
+- Turnstile action: `music-generate`
+- The music API is owner-preview-only. Public generation is intentionally not enabled; user accounts, credits, and abuse controls must be built before public access.
+
+### Required runtime secrets
+
+Add these under **Workers & Pages → digital-works-ai → Settings → Variables and Secrets**. Use type **Secret** for every value.
+
+| Secret name | Purpose |
+| --- | --- |
+| `GEMINI_API_KEY` | Google Gemini API key with Lyria 3.5 API access |
+| `ELEVENLABS_API_KEY` | ElevenLabs API key with Music API access |
+| `SONG_STUDIO_PREVIEW_KEY` | Private owner-only key entered in the Song Studio page |
+
+The existing `TURNSTILE_SECRET` is reused. Never place any of these secrets in GitHub or browser JavaScript.
+
+### Cost and testing safeguards
+
+- Google currently lists Lyria 3.5 full-song generation at **$0.08 per song** and does not list a free API tier.
+- Eleven Music API requires a paid subscriber. Usage limits and downloads depend on the subscription; check the provider dashboard before testing.
+- No music generation occurs until the owner adds provider secrets, configures the private preview key, and explicitly confirms paid usage in the page.
+- The owner preview key is an interim gate, not a substitute for account authentication and per-user credit accounting. Do not enable public generation with this prototype.
+- Each generation is a real provider request and may incur charges. Test one short benchmark at a time.
+
+See `../song-studio/README.md` for the setup sequence.
