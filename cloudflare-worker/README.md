@@ -2,7 +2,7 @@
 
 This Worker is the private server-side API for the Creator Lab image generator.
 
-- Model: `@cf/black-forest-labs/flux-2-klein-4b`
+- Models: `@cf/black-forest-labs/flux-2-klein-9b` (quality default) and `@cf/black-forest-labs/flux-2-klein-4b` (faster option)
 - Website origin allowed to call generation: `https://tra1er.github.io`
 - Human verification: Cloudflare Turnstile (server-side Siteverify)
 - Rate limit: 3 generation requests per minute per source IP (approximate, per Cloudflare location)
@@ -54,6 +54,6 @@ The browser may know the Site Key and Worker URL. It must never know the Turnsti
 
 Workers AI currently includes 10,000 free Neurons per day. On the Workers Free plan, requests fail after the free daily allowance is exhausted. On the Workers Paid plan, usage above the free allocation is billed. If the goal is to stay at $0, keep the account on Workers Free and do not upgrade for this experiment.
 
-The free allowance is shared across Workers AI use on the account. The Worker does not promise unlimited generation. The configured rate limit is approximate and per Cloudflare location; Turnstile adds a server-verified human check. The hard Workers AI daily free allocation is the final limit on the Free plan.
+The free allowance is shared across Workers AI use on the account. The Worker does not promise unlimited generation. The configured rate limit is approximate and per Cloudflare location; Turnstile adds a server-verified human check. For a 1024×1024 output, current published pricing implies roughly 7 images/day with Klein 9B or roughly 96/day with Klein 4B, before other account usage. These are estimates, not guarantees. The hard Workers AI daily free allocation is the final limit on the Free plan.
 
 Do not publish or share account API tokens, Turnstile Secret Keys, or personal credentials. If a secret is accidentally exposed, rotate it in Cloudflare immediately.
