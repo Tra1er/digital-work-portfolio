@@ -13,17 +13,27 @@
 <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="studio.css">
 <script>
-window.DW_TURNSTILE_SITE_KEY = "PASTE_PUBLIC_TURNSTILE_SITE_KEY_HERE";
+window.DW_TURNSTILE_SITE_KEY = "0x4AAAAAAGNc_zJsdu9NSbn8";
 window.onDWTurnstileLoad = function () {
-  if (!window.turnstile || !window.DW_TURNSTILE_SITE_KEY || window.DW_TURNSTILE_SITE_KEY.startsWith("PASTE_")) return;
-  window.__dwTurnstileWidget = window.turnstile.render("#turnstileWidget", {
-    sitekey: window.DW_TURNSTILE_SITE_KEY,
-    theme: "dark",
-    action: "generate",
-    callback: function (token) { window.__dwTurnstileToken = token; },
-    "expired-callback": function () { window.__dwTurnstileToken = ""; },
-    "error-callback": function () { window.__dwTurnstileToken = ""; }
-  });
+  function renderDWTurnstile() {
+    if (!window.turnstile || !window.DW_TURNSTILE_SITE_KEY) return;
+    var container = document.querySelector("#turnstileWidget");
+    if (!container || window.__dwTurnstileWidget !== undefined) return;
+    window.__dwTurnstileWidget = window.turnstile.render(container, {
+      sitekey: window.DW_TURNSTILE_SITE_KEY,
+      theme: "dark",
+      action: "generate",
+      callback: function (token) { window.__dwTurnstileToken = token; },
+      "expired-callback": function () { window.__dwTurnstileToken = ""; },
+      "error-callback": function () { window.__dwTurnstileToken = ""; },
+      "timeout-callback": function () { window.__dwTurnstileToken = ""; }
+    });
+  }
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", renderDWTurnstile, { once: true });
+  } else {
+    renderDWTurnstile();
+  }
 };
 </script>
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onDWTurnstileLoad&render=explicit" async defer></script>
