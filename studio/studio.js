@@ -42,6 +42,7 @@ async function generateFluxImage(){
  const seedText=$('#imageSeed').value.trim();
  const seed=seedText===''?undefined:Number(seedText);
  const guidance=Number($('#imageGuidance').value);
+ const model=$('#imageModel').value;
  $('#guestBtn').disabled=true;
  $('#imageOutput').innerHTML='<div class="empty-state"><div class="empty-art spin">✦</div><h3>Creating with FLUX.2</h3><p>The image is being generated on Cloudflare GPUs. This can take a little while.</p></div>';
  status('imageStatus','Sending a protected request to FLUX.2 Klein 4B...','');
@@ -52,7 +53,7 @@ async function generateFluxImage(){
   const response=await fetch(FLUX_API_URL,{
    method:'POST',
    headers:{'Content-Type':'application/json'},
-   body:JSON.stringify({prompt:finalPrompt,width,height,seed,guidance,turnstileToken:token}),
+   body:JSON.stringify({prompt:finalPrompt,width,height,seed,guidance,model,turnstileToken:token}),
    signal:controller.signal
   });
   if(!response.ok){
@@ -62,12 +63,13 @@ async function generateFluxImage(){
   }
   const type=response.headers.get('content-type')||'';
   if(!type.includes('image/'))throw new Error('The image service returned an unexpected response.');
+  const modelLabel=response.headers.get('X-Image-Model')||'FLUX.2';
   const blob=await response.blob();
   if(!blob.size)throw new Error('The model returned an empty image.');
   app.imageBlob=blob;
   app.imageUrl=URL.createObjectURL(blob);
   displayImage(app.imageUrl,'Image generated with FLUX.2 Klein 4B');
-  status('imageStatus','Generated with FLUX.2 Klein 4B · '+width+' × '+height+' · Ready to save.','ok');
+  status('imageStatus','Generated with '+modelLabel+' · '+width+' × '+height+' · Ready to save.','ok');
  }catch(e){
   $('#imageOutput').innerHTML='<div class="empty-state"><div class="empty-art">☁</div><h3>Could not generate</h3><p>Try again in a moment, or check the Cloudflare service configuration.</p></div>';
   status('imageStatus',e.name==='AbortError'?'The request timed out. Please try again.':e.message,'error');
