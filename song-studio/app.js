@@ -36,7 +36,7 @@ function updateProviderNote() {
   const provider = selectedProvider();
   const ready = providerReady(provider);
   if (provider === "lyria") {
-    $("#providerNote").textContent = ready ? "Connected · $0.08 per full song · no free API tier" : "Not connected · $0.08 per full song · no free API tier";
+    $("#providerNote").textContent = ready ? "Connected · $0.08 per track · no free generation tier" : "Not connected · $0.08 per track · no free generation tier";
   } else {
     $("#providerNote").textContent = ready ? "Connected · paid API access · plan quotas and download limits apply" : "Not connected · paid API access · plan quotas and download limits apply";
   }
@@ -368,7 +368,7 @@ async function generateSong(providerOverride, promptOverride) {
   const button = $("#generateBtn");
   button.disabled = true;
   button.textContent = "Generating…";
-  setStatus("Sending a request to " + (provider === "lyria" ? "Google Lyria 3.5" : "Eleven Music v2.5") + ". This may take a little while.", "");
+  setStatus("Sending a request to " + (provider === "lyria" ? "Cloudflare Lyria 3.5" : "Eleven Music v2.5") + ". This may take a little while.", "");
   const payload = {
     provider: provider,
     prompt: prompt,
