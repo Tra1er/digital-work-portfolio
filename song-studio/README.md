@@ -17,7 +17,7 @@ The local audio editor works without API credentials. Import audio files from yo
 
 No model is called until all of the following are true:
 
-- The owner adds the provider API key as a Cloudflare Worker runtime secret.
+- The owner connects the existing Cloudflare Workers AI binding for Lyria, or adds an ElevenLabs API key as a Cloudflare Worker runtime secret.
 - The owner creates a private `SONG_STUDIO_PREVIEW_KEY` secret and enters the same key into the prototype.
 - The Turnstile human check succeeds.
 - The owner checks the paid-usage confirmation.
@@ -26,7 +26,7 @@ Required Cloudflare runtime secrets:
 
 | Name | Where to get it |
 | --- | --- |
-| `GEMINI_API_KEY` | Google AI Studio / Gemini API, with Lyria access and billing enabled |
+| `GEMINI_API_KEY` (not required for the Cloudflare Lyria route) | Not required: Lyria 3.5 uses the existing Cloudflare Workers AI binding |
 | `ELEVENLABS_API_KEY` | ElevenLabs API key on a plan with Music API access |
 | `SONG_STUDIO_PREVIEW_KEY` | A new random private password chosen by the owner |
 
@@ -39,10 +39,9 @@ The prototype page uses the public Turnstile Site Key already configured for `tr
 ### Google Lyria 3.5
 
 - Model: `lyria-3.5`
-- REST API: `POST https://generativelanguage.googleapis.com/v1beta/interactions`
-- API key header: `x-goog-api-key`
-- Current published price: **$0.08 per full song**
-- No free API tier is listed.
+- Routed through the existing `env.AI` Cloudflare Workers AI binding using model ID `google/lyria-3.5`.
+- Cloudflare documents full-length MP3 songs and currently lists **$0.08 per track**.
+- No free music-generation tier is listed. Existing Workers AI binding avoids creating a separate Gemini API key, but each successful generation is still paid usage.
 - Duration is supplied as prompt guidance; the model may not honor an exact target duration.
 
 Official docs: https://ai.google.dev/gemini-api/docs/music-generation  
@@ -67,7 +66,7 @@ Composition plans: https://elevenlabs.io/docs/eleven-api/guides/how-to/music/com
 - `POST /api/music/generate` — owner-preview-only generation endpoint.
 - `GET /health` — existing Worker health endpoint.
 
-The Worker requires `MUSIC_RATE_LIMIT`, `TURNSTILE_SECRET`, and `SONG_STUDIO_PREVIEW_KEY` before music generation. It also checks provider-specific API secrets.
+The Worker requires `MUSIC_RATE_LIMIT`, `TURNSTILE_SECRET`, and `SONG_STUDIO_PREVIEW_KEY` before music generation. Lyria uses the existing `AI` binding; Eleven Music requires its provider API secret.
 
 ## Important launch limitation
 
