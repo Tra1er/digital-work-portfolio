@@ -189,8 +189,19 @@ async function handleMusicGeneration(request, env) {
       }
     });
   } catch (error) {
-    console.error("Music generation failed:", error?.message || "Unknown error", "AI Gateway log ID:", env.AI?.aiGatewayLogId || "unavailable");
-    return json({ error: "The music provider request failed. Check Worker logs and provider account." }, 503);
+    const detail = String(error?.message || "Unknown error").slice(0, 500);
+    const gatewayLogId = env.AI?.aiGatewayLogId || "unavailable";
+    console.error("Music generation failed:", detail, "AI Gateway log ID:", gatewayLogId);
+
+    if (/credit|billing|gateway|payment|balance|prepaid|fund/i.test(detail)) {
+      return json({
+        error: "Cloudflare AI Gateway could not authorize Lyria. Check that the default gateway has Workers AI Billing set to Unified billing and that prepaid credits are available."
+      }, 402);
+    }
+
+    return json({
+      error: "Cloudflare could not complete the Lyria request. Check the Worker and AI Gateway logs. AI Gateway log ID: " + gatewayLogId
+    }, 503);
   }
 }
 
