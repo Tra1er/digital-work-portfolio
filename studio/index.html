@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0a0910">
+<meta name="color-scheme" content="dark">
+<meta name="description" content="Creator Lab by The Digital Works: try free browser-based image editing, compression, prompt writing, color palettes, gradients, SVG shapes, social banners and more.">
+<meta property="og:title" content="Creator Lab — Free Creative Tools | The Digital Works">
+<meta property="og:description" content="Nine creative tools, zero installs. Edit images, design social banners, generate prompts, and explore AI images.">
+<meta property="og:type" content="website">
+<title>Creator Lab — Free Creative Tools | The Digital Works</title>
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="studio.css">
+<script defer src="studio.js"></script>
+</head>
+<body>
+<a href="#workspace" style="position:absolute;left:-9999px;top:10px" onfocus="this.style.left='10px'" onblur="this.style.left='-9999px'">Skip to tools</a>
+<header class="topbar"><div class="shell">
+<a class="brand" href="../index.html" aria-label="The Digital Works homepage"><span class="brand-icon">✳</span><span>digital works <small>CREATOR LAB</small></span></a>
+<nav class="top-actions" aria-label="Main navigation"><a class="navlink" href="#workspace">Free tools</a><a class="navlink" href="../products.html">Products</a><a class="navlink" href="../services.html">Services</a><a class="btn small ghost" href="../index.html">Our studio ↗</a></nav>
+</div></header>
+<main class="shell">
+<section class="hero" aria-label="Creator Lab introduction">
+<div><div class="tagline">A little creative corner of the internet</div>
+<h1>Make something<br><em>beautiful today.</em></h1>
+<p>Simple creative tools that feel good to use. Fix a photo, discover a palette, design a banner, or turn a tiny idea into something worth sharing. No installation, no clutter.</p>
+<div class="hero-buttons"><a class="btn primary" href="#workspace">Open the tools <span aria-hidden="true">↘</span></a><a class="btn ghost" href="../products.html">See what we're building ↗</a></div>
+<div class="hero-meta"><span>Free browser tools</span><span>Built for mobile</span><span>Most files stay on-device</span></div>
+</div>
+<div class="hero-art" aria-hidden="true"><div class="visual-shell"><div class="visual-window"><div class="visual-top"><i></i><i></i><i></i></div><div class="visual-image"><div class="visual-orb"></div></div></div></div><div class="float-note">✦ Made to experiment<span>Free creativity, no fuss.</span></div></div>
+</section>
+
+<section class="workspace" id="workspace">
+<div class="section-title"><div><h2>Welcome to the lab<span class="standout">.</span></h2><p>Choose a tool. Everything below is interactive, right in your browser.</p></div><span class="badge-free">9 TOOLS</span></div>
+<div class="layout">
+<aside class="side" aria-label="Creative tools">
+<div class="side-title">Your workspace</div>
+<div class="tool-nav" role="navigation" aria-label="Select a tool">
+<button type="button" class="tool-tab active" data-tool="image"><span class="symbol">✦</span>AI Image Studio<b>BETA</b></button>
+<button type="button" class="tool-tab" data-tool="prompt"><span class="symbol">✎</span>Prompt Composer</button>
+<button type="button" class="tool-tab" data-tool="editor"><span class="symbol">◐</span>Photo Editor</button>
+<button type="button" class="tool-tab" data-tool="compress"><span class="symbol">↘</span>Image Optimizer</button>
+<button type="button" class="tool-tab" data-tool="palette"><span class="symbol">◉</span>Palette Extractor</button>
+<button type="button" class="tool-tab" data-tool="gradient"><span class="symbol">◒</span>Gradient Maker</button>
+<button type="button" class="tool-tab" data-tool="banner"><span class="symbol">▣</span>Social Banner</button>
+<button type="button" class="tool-tab" data-tool="shape"><span class="symbol">✿</span>SVG Shape Maker</button>
+<button type="button" class="tool-tab" data-tool="shadow"><span class="symbol">▧</span>Shadow Builder</button>
+</div><div class="sidebar-foot"><p>Made by The Digital Works. Want something more specific?</p><a href="mailto:contact.digitalwork@proton.me?subject=Custom%20Creator%20Lab%20tool">Let's make it ↗</a></div>
+</aside>
+<div class="panel" id="views">
+
+<section class="tool-view" id="view-image" aria-label="AI image studio">
+<div class="panel-top"><div><span class="tagline">01 / Experimental image generation</span><h2>Imagine it. Make it.</h2><p>Try a rate-limited public image service, or connect a Pollinations account for an authenticated request.</p></div><span class="label-pill">AI / BETA</span></div>
+<div class="two-col">
+<div>
+<div class="field"><label for="imagePrompt">Describe your image</label><textarea id="imagePrompt" maxlength="1500" placeholder="A cozy little Japanese street at dusk, rain-soaked pavement, warm windows, candid travel photograph">A sleepy purple cat in a sunlit art studio, soft natural light, detailed fur, cozy atmosphere</textarea></div>
+<div class="sample-prompts"><button type="button" class="chip" data-example="A cozy bookstore on a rainy morning, natural photography, warm lamps and wooden shelves">☕ Cozy</button><button type="button" class="chip" data-example="An elegant glass perfume bottle floating in a lavender studio, luxury product photography, soft shadows">✧ Product</button><button type="button" class="chip" data-example="Dreamlike floating islands with pink flowering trees above clouds, peaceful fantasy environment">☁ Fantasy</button></div>
+<div class="form-grid">
+<div class="field"><label for="imageAspect">Aspect ratio</label><select id="imageAspect"><option value="square">Square · 1:1</option><option value="wide">Landscape · 16:9</option><option value="portrait">Portrait · 2:3</option></select></div>
+<div class="field"><label for="imageStyle">Style direction</label><select id="imageStyle"><option value="none">None / use my prompt</option><option value="natural candid photograph, detailed textures">Natural photo</option><option value="fine art illustration, painterly details">Illustration</option><option value="clean commercial studio photograph">Product studio</option><option value="soft dreamy lighting, ethereal atmosphere">Dreamy</option></select></div>
+</div>
+<div class="field"><label for="imageSeed">Seed (optional)</label><input id="imageSeed" type="number" min="0" max="9999999" placeholder="Random when blank"></div>
+<div class="form-row"><button type="button" class="btn primary" id="guestBtn">✦ Try guest image</button><button type="button" class="btn ghost" id="authGenBtn" disabled>Generate with account</button></div>
+<div class="notice"><strong>About AI costs:</strong> Guest access uses a third-party Classic endpoint, which may be unavailable, slow, branded or rate-limited. Account generation is <strong>not necessarily free</strong> and may use your Pollinations credits. We don't scrape or bypass paid services.</div>
+<div class="tool-callout"><h3>Connect your own account (optional)</h3><p>Authorize directly with Pollinations, with a limited permission/budget request. We do not store keys in the repository.</p><div class="form-row" style="margin-top:12px"><button type="button" class="btn small ghost" id="connectBtn">Connect Pollinations</button><a class="link-quiet" href="https://enter.pollinations.ai/" target="_blank" rel="noopener noreferrer" style="font-size:11px">About Pollinations ↗</a></div></div>
+</div>
+<div>
+<div class="result-box" id="imageOutput"><div class="empty-state"><div class="empty-art">✦</div><h3>Your next idea lives here</h3><p>Write a prompt and hit generate.</p></div></div>
+<div class="result-bottom"><span class="status" id="imageStatus" role="status">Images are requested only when you click generate.</span><div class="form-row"><button class="btn small ghost hidden" type="button" id="imageOpen">Open ↗</button><button class="btn small" type="button" id="imageDownload" disabled>↓ Save</button></div></div>
+<div class="tool-callout"><h3>Want a better prompt first?</h3><p>Use the Prompt Composer to build a cleaner, more detailed idea.</p><button class="btn small ghost" type="button" data-open="prompt" style="margin-top:10px">Open composer ↗</button></div>
+</div>
+</div></section>
+
+<section class="tool-view" id="view-prompt" hidden aria-label="Prompt composer">
+<div class="panel-top"><div><span class="tagline">02 / Better descriptions</span><h2>Prompt Composer</h2><p>A structured prompt builder for photography, illustrations and AI art. No API or account required.</p></div><span class="badge-free">FREE</span></div>
+<div class="two-col"><div>
+<div class="field"><label for="promptSubject">What do you want to create?</label><textarea id="promptSubject" data-prompt-input placeholder="e.g. A quiet little record store on a rainy afternoon">A quiet little record store on a rainy afternoon</textarea></div>
+<div class="form-grid"><div class="field"><label for="promptStyle">Visual style</label><select id="promptStyle" data-prompt-input><option value="photo">Realistic photography</option><option value="product">Product photography</option><option value="illustration">Illustration</option><option value="cinematic">Cinematic</option><option value="anime">Anime</option><option value="architecture">Architecture</option></select></div>
+<div class="field"><label for="promptLight">Lighting</label><select id="promptLight" data-prompt-input><option value="soft">Soft natural</option><option value="golden">Golden hour</option><option value="studio">Studio</option><option value="night">Night</option><option value="overcast">Overcast</option><option value="neon">Neon</option></select></div>
+<div class="field"><label for="promptComposition">Composition</label><select id="promptComposition" data-prompt-input><option value="candid">Candid / unstaged</option><option value="close">Close-up</option><option value="wide">Wide</option><option value="center">Centered</option><option value="low">Low angle</option><option value="editorial">Editorial</option></select></div></div>
+<div class="field"><label for="promptDetails">Extra details (optional)</label><input data-prompt-input id="promptDetails" placeholder="Rain on the glass, analog grain..."></div>
+</div><div><div class="field"><label>Your generated prompt</label><div id="promptOutput" class="code-output" style="min-height:190px" aria-live="polite"></div></div><div class="form-row"><button class="btn primary" id="copyPrompt" type="button">Copy prompt</button><button class="btn ghost" id="sendPrompt" type="button">Use in image studio ↗</button></div><p class="help" style="margin-top:16px">This is a rule-based composer, not a paid AI language model. Edit your result freely.</p></div></div>
+</section>
+
+<section class="tool-view" id="view-editor" hidden aria-label="Photo editor">
+<div class="panel-top"><div><span class="tagline">03 / Photo finishing</span><h2>Photo Editor</h2><p>Give photos a quick polish. Adjust brightness, contrast, saturation and grayscale, then export.</p></div><span class="badge-free">ON-DEVICE</span></div>
+<div class="two-col"><div>
+<div class="field"><label for="editorUpload">Your photo</label><input id="editorUpload" type="file" accept="image/*"></div>
+<div class="field"><div class="range-head"><label for="bright">Brightness</label><output id="out-bright">100%</output></div><input id="bright" data-range type="range" min="0" max="200" value="100"></div>
+<div class="field"><div class="range-head"><label for="contrast">Contrast</label><output id="out-contrast">100%</output></div><input id="contrast" data-range type="range" min="0" max="200" value="100"></div>
+<div class="field"><div class="range-head"><label for="saturate">Saturation</label><output id="out-saturate">100%</output></div><input id="saturate" data-range type="range" min="0" max="200" value="100"></div>
+<div class="field"><div class="range-head"><label for="grayscale">Grayscale</label><output id="out-grayscale">0%</output></div><input id="grayscale" data-range type="range" min="0" max="100" value="0"></div>
+<div class="form-row"><button id="editorReset" class="btn ghost" type="button">Reset</button><button id="editorDownload" class="btn primary" type="button">↓ Export PNG</button></div>
+</div><div><div class="preview canvas-preview"><canvas id="editorCanvas" width="500" height="310" aria-label="Photo edit preview"></canvas></div><div class="result-bottom"><span id="editorStatus" class="status" role="status">Select a photo to start. Your file stays in your browser.</span></div><div class="notice">The editor resizes large photos to a maximum 1800-pixel edge for a smoother mobile experience. Your original file is never modified.</div></div></div>
+</section>
+
+<section class="tool-view" id="view-compress" hidden aria-label="Image optimizer">
+<div class="panel-top"><div><span class="tagline">04 / Smaller files, faster sites</span><h2>Image Optimizer</h2><p>Resize and compress your photos directly on your device. Handy for online shops and websites.</p></div><span class="badge-free">ON-DEVICE</span></div>
+<div class="two-col"><div>
+<div class="field"><label for="compressUpload">Choose an image</label><input id="compressUpload" type="file" accept="image/*"></div>
+<div class="field"><label for="maxDimension">Maximum longest edge (px)</label><input id="maxDimension" type="number" value="1200" min="100" max="3000"></div>
+<div class="field"><label for="compressFormat">Output format</label><select id="compressFormat"><option value="image/webp">WebP (good for websites)</option><option value="image/jpeg">JPEG</option><option value="image/png">PNG (lossless)</option></select></div>
+<div class="field"><div class="range-head"><label for="quality">Quality (JPEG/WebP)</label><output id="qualityVal">80%</output></div><input type="range" id="quality" min="15" max="100" value="80"></div>
+<button class="btn primary" id="compressGo" type="button">↓ Optimize & download</button>
+</div><div><div class="preview canvas-preview"><canvas id="compressCanvas" width="500" height="310" aria-label="Optimized image preview"></canvas></div><div class="result-bottom"><span id="compressStatus" class="status" role="status">Choose an image to get started.</span></div><div class="notice">Not every image becomes smaller. PNG and high-quality exports can be bigger than the original. You'll see the actual result size.</div></div></div>
+</section>
+
+<section class="tool-view" id="view-palette" hidden aria-label="Palette extractor">
+<div class="panel-top"><div><span class="tagline">05 / Colors hiding in plain sight</span><h2>Palette Extractor</h2><p>Upload a photo or reference image, and discover five of its dominant colors.</p></div><span class="badge-free">ON-DEVICE</span></div>
+<div class="field"><label for="paletteUpload">Choose an image</label><input type="file" id="paletteUpload" accept="image/*"></div>
+<div class="swatches" id="swatches" aria-label="Extracted colors"><div class="swatch" style="background:#3B2B58">#3B2B58</div><div class="swatch" style="background:#815D9E">#815D9E</div><div class="swatch" style="background:#BA92CE">#BA92CE</div><div class="swatch" style="background:#E8B6C9;color:#171020">#E8B6C9</div><div class="swatch" style="background:#EDD8DD;color:#171020">#EDD8DD</div></div>
+<p class="help" style="margin-top:15px">The starting colors are an example. Upload a photo to extract a real palette. Tap any extracted swatch to copy it.</p>
+<div class="result-bottom"><span class="status" id="paletteStatus" role="status">No photo uploaded yet.</span><button class="btn small" type="button" id="paletteCopy">Copy palette</button></div>
+</section>
+
+<section class="tool-view" id="view-gradient" hidden aria-label="CSS gradient maker">
+<div class="panel-top"><div><span class="tagline">06 / Smooth color blends</span><h2>Gradient Maker</h2><p>Create a beautiful CSS gradient, then copy its code into your project.</p></div><span class="badge-free">FREE</span></div>
+<div class="two-col"><div>
+<div class="form-grid"><div class="field"><label for="gradA">Color one</label><input id="gradA" type="color" value="#b68df0"></div><div class="field"><label for="gradB">Color two</label><input id="gradB" type="color" value="#ed9dc5"></div></div>
+<div class="field"><div class="range-head"><label for="gradAngle">Angle</label><output id="gradAngleOut">130°</output></div><input id="gradAngle" type="range" min="0" max="360" value="130"></div>
+<div class="form-row"><button class="btn ghost" id="gradientRandom" type="button">✧ Surprise me</button><button class="btn primary" id="gradientCopy" type="button">Copy CSS</button></div>
+</div><div><div id="gradientBox" class="gradient-preview"></div><div class="code-output" id="gradientCode" style="margin-top:12px"></div></div></div>
+</section>
+
+<section class="tool-view" id="view-banner" hidden aria-label="Social banner creator">
+<div class="panel-top"><div><span class="tagline">07 / Ready-to-share visuals</span><h2>Social Banner</h2><p>Make a clean 1200 × 630 sharing image for blog posts, projects, and social links.</p></div><span class="badge-free">ON-DEVICE</span></div>
+<div class="two-col"><div>
+<div class="field"><label for="bannerTitle">Headline</label><textarea id="bannerTitle" rows="2" maxlength="110">Ideas made useful.</textarea></div>
+<div class="field"><label for="bannerSubtitle">Subtitle</label><input id="bannerSubtitle" maxlength="80" value="Thoughtful design. Little details. Real results."></div>
+<div class="field"><label for="bannerTheme">Color theme</label><select id="bannerTheme"><option value="violet">Midnight lilac</option><option value="sunset">Warm sunset</option><option value="ocean">Deep ocean</option><option value="forest">Forest green</option></select></div>
+<button class="btn primary" id="bannerDownload" type="button">↓ Download PNG</button>
+</div><div><div class="preview banner-preview"><canvas id="bannerCanvas" width="1200" height="630" aria-label="Social banner preview"></canvas></div><div class="notice">This tool makes simple text-based designs. No stock photos or third-party image licenses are involved.</div></div></div>
+</section>
+
+<section class="tool-view" id="view-shape" hidden aria-label="SVG shape maker">
+<div class="panel-top"><div><span class="tagline">08 / Playful vector design</span><h2>SVG Shape Maker</h2><p>Generate organic shapes for websites, cards and illustrations. Export editable vector SVG.</p></div><span class="badge-free">FREE</span></div>
+<div class="two-col"><div>
+<div class="field"><div class="range-head"><label for="shapePoints">Complexity</label><output id="shapePointsOut">8</output></div><input id="shapePoints" type="range" min="4" max="18" value="8"></div>
+<div class="field"><div class="range-head"><label for="shapeWobble">Organic variation</label><output id="shapeWobbleOut">35</output></div><input id="shapeWobble" type="range" min="0" max="70" value="35"></div>
+<div class="field"><label for="shapeFill">Fill color</label><input id="shapeFill" type="color" value="#b79afb"></div>
+<input id="shapeSeed" type="hidden" value="137">
+<div class="form-row"><button class="btn ghost" id="shapeRandom" type="button">↻ New shape</button><button class="btn ghost" id="shapeCopy" type="button">Copy SVG</button><button class="btn primary" id="shapeDownload" type="button">↓ Download</button></div>
+</div><div><div class="preview shape-preview" id="shapePreview" aria-label="Vector shape preview"></div><p class="help" style="margin-top:12px">The shape is made from vector paths, so it stays sharp at any size.</p></div></div>
+</section>
+
+<section class="tool-view" id="view-shadow" hidden aria-label="CSS shadow builder">
+<div class="panel-top"><div><span class="tagline">09 / The finishing touch</span><h2>Shadow Builder</h2><p>Make softer, more believable shadows for cards, buttons, and panels.</p></div><span class="badge-free">FREE</span></div>
+<div class="two-col"><div>
+<div class="field"><div class="range-head"><label for="shadowX">Horizontal offset</label><output id="shadowXOut">8px</output></div><input type="range" id="shadowX" min="-50" max="50" value="8"></div>
+<div class="field"><div class="range-head"><label for="shadowY">Vertical offset</label><output id="shadowYOut">20px</output></div><input type="range" id="shadowY" min="-50" max="50" value="20"></div>
+<div class="field"><div class="range-head"><label for="shadowBlur">Blur</label><output id="shadowBlurOut">45px</output></div><input type="range" id="shadowBlur" min="0" max="100" value="45"></div>
+<div class="field"><div class="range-head"><label for="shadowSpread">Spread</label><output id="shadowSpreadOut">0px</output></div><input type="range" id="shadowSpread" min="-30" max="40" value="0"></div>
+<div class="field"><label for="shadowColor">Shadow color</label><input id="shadowColor" type="color" value="#7e5aaa"></div>
+<button class="btn primary" id="shadowCopy" type="button">Copy CSS</button>
+</div><div><div class="preview" style="min-height:240px"><div id="shadowDemo" style="width:160px;height:112px;background:linear-gradient(145deg,#bd9aef,#8966bb);border-radius:19px"></div></div><div class="code-output" id="shadowCode" style="margin-top:13px"></div></div></div>
+</section>
+
+</div></div>
+</section>
+
+<section aria-label="More creative tools" id="more-tools">
+<div class="section-title"><div><h2>More little superpowers.</h2><p>Jump straight to something useful.</p></div></div>
+<div class="tool-list">
+<button class="quick-card" type="button" data-open="prompt"><div class="emoji">✎</div><h3>Write better prompts</h3><p>Turn a rough idea into a detailed creative prompt.</p><span class="end">Open tool ↗</span></button>
+<button class="quick-card" type="button" data-open="editor"><div class="emoji">◐</div><h3>Polish a photo</h3><p>Simple color corrections, entirely in your browser.</p><span class="end">Open tool ↗</span></button>
+<button class="quick-card" type="button" data-open="compress"><div class="emoji">↘</div><h3>Shrink image files</h3><p>Resize, optimize, and download in common formats.</p><span class="end">Open tool ↗</span></button>
+<button class="quick-card" type="button" data-open="palette"><div class="emoji">◉</div><h3>Steal a color mood</h3><p>Extract a five-color palette from your own images.</p><span class="end">Open tool ↗</span></button>
+<button class="quick-card" type="button" data-open="banner"><div class="emoji">▣</div><h3>Make a social graphic</h3><p>Export a ready-to-share image in one tap.</p><span class="end">Open tool ↗</span></button>
+<button class="quick-card" type="button" data-open="shape"><div class="emoji">✿</div><h3>Play with SVG shapes</h3><p>Randomize and export editable vector shapes.</p><span class="end">Open tool ↗</span></button>
+</div></section>
+<section class="cta-section" aria-label="The Digital Works products and services"><div><div class="tagline">Built with care, by The Digital Works</div><h2>Like this? We build more.</h2><p>Creator Lab is our free playground. If you want a custom website, little tool, helpful script, or original digital asset, we're building those too. No call required — just a message.</p></div><div class="cta-links"><a class="btn primary" href="mailto:contact.digitalwork@proton.me?subject=Creator%20Lab%20custom%20project">Request a build ↗</a><a class="btn ghost" href="https://ko-fi.com/digitalworks1" target="_blank" rel="noopener noreferrer">Visit our Ko-fi ↗</a></div></section>
+</main>
+<footer class="shell footer"><span>© 2026 The Digital Works · Creator Lab, first edition</span><span>Private local tools don't upload your files. AI image prompts are sent to Pollinations only when you choose to generate. <a href="../index.html">Back to the studio ↗</a></span></footer>
+<div id="toast" class="hidden" role="status" aria-live="polite" style="position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:20;background:#e6d1ff;color:#21132d;border:1px solid #fff6;border-radius:12px;padding:12px 20px;font-weight:700;box-shadow:0 10px 40px #0009;font-size:12px;max-width:95vw;text-align:center"></div>
+</body>
+</html>
