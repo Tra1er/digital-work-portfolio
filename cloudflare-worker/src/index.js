@@ -71,21 +71,28 @@ function decodeBase64Image(base64) {
 export default {
   async fetch(request, env) {
     const origin = request.headers.get("Origin");
+    const url = new URL(request.url);
+
+    // A public, read-only health check is safe without CORS credentials.
+    if (request.method === "GET" && url.pathname === "/health") {
+      return new Response(JSON.stringify({
+        ok: true,
+        service: "The Digital Works image API",
+        model: MODEL
+      }), {
+        headers: {
+          "Content-Type": "application/json; charset=utf-8",
+          "Cache-Control": "no-store"
+        }
+      });
+    }
+
     if (origin !== ALLOWED_ORIGIN) {
       return new Response("Forbidden origin", { status: 403 });
     }
 
     if (request.method === "OPTIONS") {
       return new Response(null, { status: 204, headers: corsHeaders() });
-    }
-
-    const url = new URL(request.url);
-    if (request.method === "GET" && url.pathname === "/health") {
-      return json({
-        ok: true,
-        service: "The Digital Works image API",
-        model: MODEL
-      });
     }
 
     if (request.method !== "POST" || url.pathname !== "/api/generate") {
