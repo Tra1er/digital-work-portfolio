@@ -110,3 +110,21 @@ Not yet implemented:
 - MIDI note editing or instrument-level regeneration.
 
 These are intentionally deferred until the model benchmark establishes which provider and workflow are worth investing in.
+
+
+## Pre-Codex preparation (November 22, 2026)
+
+The repository now includes a concrete product plan and the first unit-tested arrangement primitives:
+
+- [Codex handoff](CODEX_HANDOFF.md) — exact Stage 1 prompt and acceptance checklist.
+- [Product blueprint](PRODUCT_BLUEPRINT.md) — UI, timing, local editing, cloud architecture, design and milestone plan.
+- [ACE-Step evaluation](ACE_STEP_EVALUATION.md) — official LEGO instrument families, source audio requirement, test prompts, quality gate and GPU budget cautions.
+- [Pure arrangement engine](core/arrangement.mjs) — tick-based bars, snap, track/clip data, move, duplicate, resize, loop, remove and playback-plan conversion. **Not yet connected to the existing UI.**
+- [Arrangement unit tests](core/arrangement.test.mjs) — run \`node --test song-studio/core/arrangement.test.mjs\` from the repository root with Node.js.
+- [Repo agent instructions](../AGENTS.md) — mandatory safety boundaries for Codex.
+
+The current live Song Studio has a basic **whole-track audio engine**, not an integrated clip-based timeline. A successful local arrangement-engine test does not mean the full DAW is already built.
+
+**Cloudflare music provider status disclaimer:** \`lyria.configured=true\` means the Worker has an AI binding; it does **not** establish that prepaid AI Gateway credits, successful music generation or commercial production access are available.
+
+**Recommended immediate next milestone:** offline Stage 1 timeline and audio scheduling, using the first prompt in CODEX_HANDOFF.md. No Modal account or GPU is needed for that milestone. Stage 2 should only be attempted after the owner consents to a private, capped test of ACE-Step LEGO on Modal.
