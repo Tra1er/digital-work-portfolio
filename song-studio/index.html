@@ -64,10 +64,10 @@ window.onSongTurnstileLoad = function () {
       <div class="panel-heading"><div><span class="eyebrow">01 / COMPOSE</span><h2>Start with an idea</h2></div><span class="step-no">01</span></div>
       <label class="field-label" for="provider">Generation model</label>
       <select id="provider" class="control">
-        <option value="lyria">Google Lyria 3.5 · lower-cost test</option>
+        <option value="lyria">Cloudflare Lyria 3.5 · lower-cost test</option>
         <option value="eleven">Eleven Music v2.5 · advanced composition</option>
       </select>
-      <div class="provider-note" id="providerNote">Lyria 3.5 · $0.08 per full song · no free API tier</div>
+      <div class="provider-note" id="providerNote">Cloudflare Lyria 3.5 · $0.08 per track · no free generation tier</div>
 
       <label class="field-label" for="prompt">Describe the sound</label>
       <textarea id="prompt" class="control prompt-box" maxlength="3000" placeholder="Describe the genre, mood, instruments, vocal delivery, energy and production. Be specific.">Melancholic indie rock with natural, intimate male vocals, warm live drums, expressive electric guitars, melodic bass and a memorable emotional chorus. Organic studio recording, dynamic verses that open into a powerful final chorus. No synthetic-sounding vocals or generic stock backing.</textarea>
@@ -109,7 +109,7 @@ window.onSongTurnstileLoad = function () {
       </div>
 
       <div class="model-cards">
-        <article class="model-card" id="lyriaCard"><div class="model-top"><span class="model-icon">G</span><span class="model-state" id="lyriaState">Checking</span></div><h3>Lyria 3.5</h3><p>Lower-cost full-song benchmark. $0.08 per generation, with no free API tier.</p><a href="https://ai.google.dev/gemini-api/docs/music-generation" target="_blank" rel="noopener">API documentation ↗</a></article>
+        <article class="model-card" id="lyriaCard"><div class="model-top"><span class="model-icon">G</span><span class="model-state" id="lyriaState">Checking</span></div><h3>Lyria 3.5</h3><p>Lower-cost full-song benchmark through your existing Cloudflare AI binding. $0.08 per track; no free generation tier.</p><a href="https://ai.google.dev/gemini-api/docs/music-generation" target="_blank" rel="noopener">API documentation ↗</a></article>
         <article class="model-card" id="elevenCard"><div class="model-top"><span class="model-icon">11</span><span class="model-state" id="elevenState">Checking</span></div><h3>Eleven Music v2.5</h3><p>Composition plans, section-aware structure, vocals and instrumental generation. Paid API access.</p><a href="https://elevenlabs.io/docs/overview/capabilities/music" target="_blank" rel="noopener">API documentation ↗</a></article>
       </div>
 
