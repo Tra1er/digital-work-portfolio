@@ -61,11 +61,11 @@ Do not publish or share account API tokens, Turnstile Secret Keys, or personal c
 
 ## Song Studio private preview
 
-The Worker also exposes private AI music generation routes for the Song Studio prototype.
+The Worker also exposes private AI music generation routes for the Song Studio prototype. Lyria 3.5 uses the existing `AI` binding with model ID `google/lyria-3.5`; it does not need a separate Gemini API key.
 
 - Status route: `GET /api/music/status`
 - Generation route: `POST /api/music/generate`
-- Providers: Google Lyria 3.5 and Eleven Music v2.5
+- Providers: Cloudflare-hosted Google Lyria 3.5 and Eleven Music v2.5
 - Separate music rate limit: 2 requests per minute per source IP (approximate, per Cloudflare location)
 - Turnstile action: `music-generate`
 - The music API is owner-preview-only. Public generation is intentionally not enabled; user accounts, credits, and abuse controls must be built before public access.
@@ -84,7 +84,7 @@ The existing `TURNSTILE_SECRET` is reused. Never place any of these secrets in G
 
 ### Cost and testing safeguards
 
-- Google currently lists Lyria 3.5 full-song generation at **$0.08 per song** and does not list a free API tier.
+- Cloudflare currently lists `google/lyria-3.5` at **$0.08 per track**. No free music-generation tier is listed; each generation can incur a charge.
 - Eleven Music API requires a paid subscriber. Usage limits and downloads depend on the subscription; check the provider dashboard before testing.
 - No music generation occurs until the owner adds provider secrets, configures the private preview key, and explicitly confirms paid usage in the page.
 - The owner preview key is an interim gate, not a substitute for account authentication and per-user credit accounting. Do not enable public generation with this prototype.
