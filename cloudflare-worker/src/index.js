@@ -14,7 +14,7 @@ function corsHeaders() {
     "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
     "Access-Control-Allow-Headers": "Content-Type",
     "Access-Control-Max-Age": "86400",
-    "Access-Control-Expose-Headers": "X-Image-Model",
+    "Access-Control-Expose-Headers": "X-Image-Model, X-Music-Provider, X-Music-Model",
     "Vary": "Origin"
   };
 }
@@ -30,7 +30,7 @@ function json(data, status = 200) {
   });
 }
 
-async function verifyTurnstile(token, secret, ip) {
+async function verifyTurnstile(token, secret, ip, expectedAction = "generate") {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), 8000);
   try {
@@ -52,11 +52,151 @@ async function verifyTurnstile(token, secret, ip) {
     const result = await response.json();
     return result.success === true &&
       result.hostname === ALLOWED_HOSTNAME &&
-      result.action === "generate";
+      result.action === expectedAction;
   } catch {
     return false;
   } finally {
     clearTimeout(timer);
+  }
+}
+
+
+
+function decodeBase64Bytes(base64) {
+  const binary = atob(base64);
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+  return bytes;
+}
+
+async function handleMusicGeneration(request, env) {
+  if (!env.TURNSTILE_SECRET || !env.MUSIC_RATE_LIMIT || !env.SONG_STUDIO_PREVIEW_KEY) {
+    return json({ error: "Private music preview is not configured yet." }, 503);
+  }
+  if (!request.headers.get("Content-Type")?.includes("application/json")) {
+    return json({ error: "Send a JSON request." }, 415);
+  }
+  let body;
+  try { body = await request.json(); } catch { return json({ error: "Invalid request body." }, 400); }
+
+  const provider = body.provider === "eleven" ? "eleven" : body.provider === "lyria" ? "lyria" : "";
+  const prompt = typeof body.prompt === "string" ? body.prompt.trim() : "";
+  const lyrics = typeof body.lyrics === "string" ? body.lyrics.trim() : "";
+  const mode = body.mode === "instrumental" ? "instrumental" : "vocals";
+  const durationSeconds = Number(body.durationSeconds);
+  const bpm = Number(body.bpm);
+  const previewKey = typeof body.previewKey === "string" ? body.previewKey : "";
+  const token = typeof body.turnstileToken === "string" ? body.turnstileToken : "";
+
+  if (!provider) return json({ error: "Choose a supported music provider." }, 400);
+  if (!prompt || prompt.length > 3000) return json({ error: "The music prompt must contain 1–3,000 characters." }, 400);
+  if (lyrics.length > 5000) return json({ error: "Lyrics must be 5,000 characters or fewer." }, 400);
+  if (![30, 60, 120, 180, 240].includes(durationSeconds)) return json({ error: "Choose an available song length." }, 400);
+  if (!Number.isInteger(bpm) || bpm < 60 || bpm > 180) return json({ error: "Choose a tempo between 60 and 180 BPM." }, 400);
+  if (!previewKey || previewKey.length > 256 || previewKey !== env.SONG_STUDIO_PREVIEW_KEY) return json({ error: "The private preview key is incorrect." }, 403);
+  if (!token || token.length > 2048) return json({ error: "Complete the human check before generating." }, 400);
+
+  const apiKey = provider === "lyria" ? env.GEMINI_API_KEY : env.ELEVENLABS_API_KEY;
+  if (!apiKey) return json({ error: "This music provider has not been connected by the owner yet." }, 503);
+
+  const ip = request.headers.get("CF-Connecting-IP") || "unknown";
+  const rate = await env.MUSIC_RATE_LIMIT.limit({ key: ip });
+  if (!rate.success) return json({ error: "Too many music requests. Please wait a minute before trying again." }, 429);
+  const verified = await verifyTurnstile(token, env.TURNSTILE_SECRET, ip, "music-generate");
+  if (!verified) return json({ error: "Human verification expired or failed. Please try again." }, 403);
+
+  const stylePrompt = prompt + "\nTempo direction: " + bpm + " BPM. Target duration: about " + durationSeconds + " seconds.";
+  try {
+    if (provider === "lyria") {
+      let fullPrompt = stylePrompt;
+      if (mode === "instrumental") fullPrompt += "\nInstrumental only: no vocals, no spoken words.";
+      else if (lyrics) fullPrompt += "\nUse these lyrics as the vocal text where musically appropriate:\n" + lyrics;
+      else fullPrompt += "\nInclude natural, expressive vocals and original lyrics.";
+      const response = await fetch("https://generativelanguage.googleapis.com/v1beta/interactions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "x-goog-api-key": apiKey },
+        body: JSON.stringify({ model: "lyria-3.5", input: fullPrompt })
+      });
+      if (!response.ok) {
+        console.error("Lyria API error:", response.status, (await response.text()).slice(0, 500));
+        if (response.status === 401 || response.status === 403) return json({ error: "Google rejected the API key or this account does not have Lyria API access." }, 502);
+        if (response.status === 429) return json({ error: "Google music quota or rate limit reached. Check Gemini API billing and limits." }, 429);
+        return json({ error: "Google Lyria could not generate this track (HTTP " + response.status + ")." }, 502);
+      }
+      const result = await response.json();
+      let audio = result.output_audio || null;
+      if (!audio && Array.isArray(result.steps)) {
+        for (const step of result.steps) {
+          if (step.output_audio?.data) audio = step.output_audio;
+          else if (step.audio?.data) audio = step.audio;
+        }
+      }
+      if (!audio || typeof audio.data !== "string") {
+        console.error("Lyria response did not include output_audio.");
+        return json({ error: "Lyria returned no audio payload. Check provider response and model access." }, 502);
+      }
+      const bytes = decodeBase64Bytes(audio.data);
+      return new Response(bytes, {
+        status: 200,
+        headers: {
+          ...corsHeaders(), "Content-Type": "audio/mpeg",
+          "Content-Length": String(bytes.byteLength), "Cache-Control": "no-store",
+          "X-Music-Provider": "Google", "X-Music-Model": "Lyria 3.5"
+        }
+      });
+    }
+
+    const styles = [
+      "professionally arranged music", "clear, detailed studio production",
+      String(bpm) + " BPM", "cohesive musical structure", "natural expressive performance"
+    ];
+    const negativeStyles = ["robotic vocals", "muddy mix", "generic stock backing", "unintended sound effects"];
+    let payload;
+    if (lyrics && mode === "vocals") {
+      const sections = lyrics.split(/(?=^\s*\[[^\]]+\]\s*$)/m).map((part) => part.trim()).filter(Boolean).slice(0, 30);
+      const chunksSource = sections.length ? sections : ["[Verse 1]\n" + lyrics];
+      const perSection = Math.max(3000, Math.min(120000, Math.floor((durationSeconds * 1000) / chunksSource.length)));
+      const chunks = chunksSource.map((section, index) => ({
+        text: section,
+        duration_ms: perSection,
+        positive_styles: index === 0 ? styles.concat(["vocal-led song", "memorable melodic hook"]) : styles,
+        negative_styles: negativeStyles,
+        context_adherence: "high"
+      }));
+      payload = { composition_plan: { chunks: chunks }, model_id: "music_v2_5" };
+    } else {
+      let fullPrompt = stylePrompt;
+      if (mode === "instrumental") fullPrompt += "\nInstrumental only, no vocals.";
+      else fullPrompt += "\nInclude natural, expressive vocals and original lyrics.";
+      payload = {
+        prompt: fullPrompt, music_length_ms: durationSeconds * 1000,
+        model_id: "music_v2_5", force_instrumental: mode === "instrumental"
+      };
+    }
+    const response = await fetch("https://api.elevenlabs.io/v1/music?output_format=mp3_48000_192", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "xi-api-key": apiKey },
+      body: JSON.stringify(payload)
+    });
+    if (!response.ok) {
+      console.error("Eleven Music API error:", response.status, (await response.text()).slice(0, 500));
+      if (response.status === 401 || response.status === 403) return json({ error: "ElevenLabs rejected the API key or this account does not have Music API access." }, 502);
+      if (response.status === 429) return json({ error: "ElevenLabs usage limit reached. Check your subscription and API quota." }, 429);
+      return json({ error: "Eleven Music could not generate this track (HTTP " + response.status + ")." }, 502);
+    }
+    const audioBytes = await response.arrayBuffer();
+    if (!audioBytes.byteLength) return json({ error: "Eleven Music returned an empty audio file." }, 502);
+    return new Response(audioBytes, {
+      status: 200,
+      headers: {
+        ...corsHeaders(), "Content-Type": "audio/mpeg",
+        "Content-Length": String(audioBytes.byteLength), "Cache-Control": "no-store",
+        "X-Music-Provider": "ElevenLabs", "X-Music-Model": "Eleven Music v2.5"
+      }
+    });
+  } catch (error) {
+    console.error("Music generation failed:", error?.message || "Unknown error");
+    return json({ error: "The music provider request failed. Check Worker logs and provider account." }, 503);
   }
 }
 
@@ -94,6 +234,20 @@ export default {
 
     if (request.method === "OPTIONS") {
       return new Response(null, { status: 204, headers: corsHeaders() });
+    }
+
+    if (request.method === "GET" && url.pathname === "/api/music/status") {
+      return json({
+        providers: {
+          lyria: { configured: Boolean(env.GEMINI_API_KEY) },
+          eleven: { configured: Boolean(env.ELEVENLABS_API_KEY) }
+        },
+        previewEnabled: Boolean(env.SONG_STUDIO_PREVIEW_KEY)
+      });
+    }
+
+    if (request.method === "POST" && url.pathname === "/api/music/generate") {
+      return handleMusicGeneration(request, env);
     }
 
     if (request.method !== "POST" || url.pathname !== "/api/generate") {
