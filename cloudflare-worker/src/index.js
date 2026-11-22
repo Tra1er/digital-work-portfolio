@@ -113,7 +113,11 @@ async function handleMusicGeneration(request, env) {
       if (mode === "instrumental") fullPrompt += "\nInstrumental only: no vocals, no spoken words.";
       else if (lyrics) fullPrompt += "\nUse these lyrics as the vocal text where musically appropriate:\n" + lyrics;
       else fullPrompt += "\nInclude natural, expressive vocals and original lyrics.";
-      const result = await env.AI.run("google/lyria-3.5", { prompt: fullPrompt });
+      const result = await env.AI.run(
+        "google/lyria-3.5",
+        { prompt: fullPrompt },
+        { gateway: { id: "default" } }
+      );
       const audioUrl = result && result.audio;
       if (typeof audioUrl !== "string" || !audioUrl.startsWith("https://")) {
         console.error("Cloudflare Lyria returned no valid audio URL.");
@@ -185,7 +189,7 @@ async function handleMusicGeneration(request, env) {
       }
     });
   } catch (error) {
-    console.error("Music generation failed:", error?.message || "Unknown error");
+    console.error("Music generation failed:", error?.message || "Unknown error", "AI Gateway log ID:", env.AI?.aiGatewayLogId || "unavailable");
     return json({ error: "The music provider request failed. Check Worker logs and provider account." }, 503);
   }
 }
