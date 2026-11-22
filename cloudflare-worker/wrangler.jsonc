@@ -1,0 +1,15 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "digital-works-ai",
+  "main": "src/index.js",
+  "compatibility_date": "2026-11-22",
+  "workers_dev": true,
+  "ai": { "binding": "AI" },
+  "ratelimits": [
+    {
+      "name": "IMAGE_RATE_LIMIT",
+      "namespace_id": "2026112201",
+      "simple": { "limit": 3, "period": 60 }
+    }
+  ]
+}
