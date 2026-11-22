@@ -16,7 +16,7 @@ showTool(location.hash.slice(1)||'image',false);
 window.addEventListener('hashchange',()=>showTool(location.hash.slice(1),false));
 
 /* FLUX.2 Klein 4B through our private Cloudflare Worker. */
-const FLUX_API_URL = 'PASTE_CLOUDFLARE_WORKER_URL_HERE/api/generate';
+const FLUX_API_URL = 'https://digital-works-ai.traier12345.workers.dev/api/generate';
 function resetHumanCheck(){
  app.turnstileToken='';
  window.__dwTurnstileToken='';
