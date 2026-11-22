@@ -96,8 +96,9 @@ async function handleMusicGeneration(request, env) {
   if (!previewKey || previewKey.length > 256 || previewKey !== env.SONG_STUDIO_PREVIEW_KEY) return json({ error: "The private preview key is incorrect." }, 403);
   if (!token || token.length > 2048) return json({ error: "Complete the human check before generating." }, 400);
 
-  const apiKey = provider === "lyria" ? env.GEMINI_API_KEY : env.ELEVENLABS_API_KEY;
-  if (!apiKey) return json({ error: "This music provider has not been connected by the owner yet." }, 503);
+  const apiKey = provider === "eleven" ? env.ELEVENLABS_API_KEY : "";
+  if (provider === "lyria" && !env.AI) return json({ error: "Cloudflare Workers AI is not connected to this Worker." }, 503);
+  if (provider === "eleven" && !apiKey) return json({ error: "ElevenLabs Music API has not been connected by the owner yet." }, 503);
 
   const ip = request.headers.get("CF-Connecting-IP") || "unknown";
   const rate = await env.MUSIC_RATE_LIMIT.limit({ key: ip });
@@ -112,36 +113,25 @@ async function handleMusicGeneration(request, env) {
       if (mode === "instrumental") fullPrompt += "\nInstrumental only: no vocals, no spoken words.";
       else if (lyrics) fullPrompt += "\nUse these lyrics as the vocal text where musically appropriate:\n" + lyrics;
       else fullPrompt += "\nInclude natural, expressive vocals and original lyrics.";
-      const response = await fetch("https://generativelanguage.googleapis.com/v1beta/interactions", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "x-goog-api-key": apiKey },
-        body: JSON.stringify({ model: "lyria-3.5", input: fullPrompt })
-      });
-      if (!response.ok) {
-        console.error("Lyria API error:", response.status, (await response.text()).slice(0, 500));
-        if (response.status === 401 || response.status === 403) return json({ error: "Google rejected the API key or this account does not have Lyria API access." }, 502);
-        if (response.status === 429) return json({ error: "Google music quota or rate limit reached. Check Gemini API billing and limits." }, 429);
-        return json({ error: "Google Lyria could not generate this track (HTTP " + response.status + ")." }, 502);
+      const result = await env.AI.run("@cf/google/lyria-3.5", { prompt: fullPrompt });
+      const audioUrl = result && result.audio;
+      if (typeof audioUrl !== "string" || !audioUrl.startsWith("https://")) {
+        console.error("Cloudflare Lyria returned no valid audio URL.");
+        return json({ error: "Cloudflare Lyria returned no playable audio. Check the Workers AI response and account access." }, 502);
       }
-      const result = await response.json();
-      let audio = result.output_audio || null;
-      if (!audio && Array.isArray(result.steps)) {
-        for (const step of result.steps) {
-          if (step.output_audio?.data) audio = step.output_audio;
-          else if (step.audio?.data) audio = step.audio;
-        }
+      const audioResponse = await fetch(audioUrl);
+      if (!audioResponse.ok) {
+        console.error("Could not retrieve generated Lyria audio:", audioResponse.status);
+        return json({ error: "The generated Lyria audio could not be retrieved." }, 502);
       }
-      if (!audio || typeof audio.data !== "string") {
-        console.error("Lyria response did not include output_audio.");
-        return json({ error: "Lyria returned no audio payload. Check provider response and model access." }, 502);
-      }
-      const bytes = decodeBase64Bytes(audio.data);
-      return new Response(bytes, {
+      const audioBytes = await audioResponse.arrayBuffer();
+      if (!audioBytes.byteLength) return json({ error: "Lyria returned an empty audio file." }, 502);
+      return new Response(audioBytes, {
         status: 200,
         headers: {
-          ...corsHeaders(), "Content-Type": "audio/mpeg",
-          "Content-Length": String(bytes.byteLength), "Cache-Control": "no-store",
-          "X-Music-Provider": "Google", "X-Music-Model": "Lyria 3.5"
+          ...corsHeaders(), "Content-Type": audioResponse.headers.get("Content-Type") || "audio/mpeg",
+          "Content-Length": String(audioBytes.byteLength), "Cache-Control": "no-store",
+          "X-Music-Provider": "Cloudflare / Google", "X-Music-Model": "Lyria 3.5"
         }
       });
     }
@@ -239,7 +229,7 @@ export default {
     if (request.method === "GET" && url.pathname === "/api/music/status") {
       return json({
         providers: {
-          lyria: { configured: Boolean(env.GEMINI_API_KEY) },
+          lyria: { configured: Boolean(env.AI) },
           eleven: { configured: Boolean(env.ELEVENLABS_API_KEY) }
         },
         previewEnabled: Boolean(env.SONG_STUDIO_PREVIEW_KEY)
