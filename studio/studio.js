@@ -15,83 +15,70 @@ $$('[data-open]').forEach(b=>b.addEventListener('click',()=>showTool(b.dataset.o
 showTool(location.hash.slice(1)||'image',false);
 window.addEventListener('hashchange',()=>showTool(location.hash.slice(1),false));
 
-/* The anonymous Classic endpoint is independent from the credit-based authenticated service. */
-const guestBase='https://image.pollinations.ai/prompt/';
-$('#guestBtn').addEventListener('click',()=>generateImage(false));
-$('#authGenBtn').addEventListener('click',()=>generateImage(true));
+/* FLUX.2 Klein 4B through our private Cloudflare Worker. */
+const FLUX_API_URL = 'PASTE_CLOUDFLARE_WORKER_URL_HERE/api/generate';
+function resetHumanCheck(){
+ app.turnstileToken='';
+ window.__dwTurnstileToken='';
+ if(window.turnstile&&window.__dwTurnstileWidget!==undefined&&window.__dwTurnstileWidget!==null){
+  try{window.turnstile.reset(window.__dwTurnstileWidget);}catch(e){}
+ }
+}
+$('#guestBtn').addEventListener('click',generateFluxImage);
 $$('[data-example]').forEach(b=>b.addEventListener('click',()=>{$('#imagePrompt').value=b.dataset.example;}));
-async function generateImage(auth){
- const prompt=$('#imagePrompt').value.trim();if(!prompt){status('imageStatus','Add a description first.','error');return;}
- if(prompt.length>1500){status('imageStatus','Please keep prompts under 1,500 characters.','error');return;}
- if(auth&&!app.token){status('imageStatus','Connect your Pollinations account first. Usage may consume credits.','error');return;}
- let style=$('#imageStyle').value,ratio=$('#imageAspect').value,seed=parseInt($('#imageSeed').value,10);
- if(!Number.isFinite(seed))seed=Math.floor(Math.random()*1000000);
- const dimensions=ratio==='wide'?[768,432]:ratio==='portrait'?[512,768]:[768,768];
+$('#imageGuidance').addEventListener('input',()=>{$('#imageGuidanceOut').textContent=$('#imageGuidance').value;});
+$('#imageGuidanceOut').textContent=$('#imageGuidance').value;
+async function generateFluxImage(){
+ const prompt=$('#imagePrompt').value.trim();
+ if(!prompt){status('imageStatus','Write a prompt first.','error');return;}
+ if(prompt.length>1500){status('imageStatus','Please keep your prompt under 1,500 characters.','error');return;}
+ if(FLUX_API_URL.includes('PASTE_')){status('imageStatus','Backend setup is not finished yet. We still need to deploy the Cloudflare Worker and connect its URL.','error');return;}
+ if(!window.turnstile||window.__dwTurnstileWidget===undefined||window.__dwTurnstileWidget===null){status('imageStatus','Human verification is not configured yet. Add the public Turnstile site key first.','error');return;}
+ const token=window.__dwTurnstileToken||(window.turnstile.getResponse(window.__dwTurnstileWidget)||'');
+ if(!token){status('imageStatus','Complete the Cloudflare human check before generating.','error');return;}
+ const [width,height]=$('#imageAspect').value.split('x').map(Number);
+ const style=$('#imageStyle').value;
  const finalPrompt=prompt+(style==='none'?'':', '+style);
- $('#imageOutput').innerHTML='<div class="empty-state"><div class="empty-art spin">✦</div><h3>Making your image</h3><p>Generation depends on the external provider.</p></div>';
- $('#guestBtn').disabled=true;$('#authGenBtn').disabled=true;
- status('imageStatus',auth?'Requesting Pollinations image (credit-based)...':'Trying anonymous Classic access. This service can be rate limited...','');
- let timedOut=false;
+ const seedText=$('#imageSeed').value.trim();
+ const seed=seedText===''?undefined:Number(seedText);
+ const guidance=Number($('#imageGuidance').value);
+ $('#guestBtn').disabled=true;
+ $('#imageOutput').innerHTML='<div class="empty-state"><div class="empty-art spin">✦</div><h3>Creating with FLUX.2</h3><p>The image is being generated on Cloudflare GPUs. This can take a little while.</p></div>';
+ status('imageStatus','Sending a protected request to FLUX.2 Klein 4B...','');
+ const controller=new AbortController();
+ const timer=setTimeout(()=>controller.abort(),120000);
  try{
-  if(app.imageBlob){app.imageBlob=null;}
-  if(app.imageUrl.startsWith('blob:'))URL.revokeObjectURL(app.imageUrl);
-  if(auth){
-   const u='https://gen.pollinations.ai/image/'+encodeURIComponent(finalPrompt)+'?model=black-forest-labs%2Fflux.1-schnell&width='+dimensions[0]+'&height='+dimensions[1]+'&seed='+seed;
-   const ac=new AbortController();const timer=setTimeout(()=>ac.abort(),90000);
-   let res;try{res=await fetch(u,{headers:{Authorization:'Bearer '+app.token},signal:ac.signal});}finally{clearTimeout(timer);}
-   if(!res.ok){const body=await res.text().catch(()=>'');throw new Error('Provider returned '+res.status+(body.includes('balance')?' (check your balance)':''));}
-   const blob=await res.blob();if(!blob.type.startsWith('image/'))throw new Error('Provider did not return an image.');
-   app.imageBlob=blob;app.imageUrl=URL.createObjectURL(blob);
-   displayImage(app.imageUrl,'Generated image based on your prompt');status('imageStatus','Image ready. You can download it.','ok');
-  }else{
-   const u=guestBase+encodeURIComponent(finalPrompt)+'?width='+dimensions[0]+'&height='+dimensions[1]+'&seed='+seed;
-   const image=new Image();
-   const timer=setTimeout(()=>{timedOut=true;image.onload=null;image.onerror=null;failedImage('Anonymous generation timed out. The public service may be busy.');},90000);
-   image.onload=()=>{if(timedOut)return;clearTimeout(timer);app.imageUrl=u;displayImage(u,'Image generated by the public Classic API');status('imageStatus','Guest image loaded. Public service limits and branding apply.','ok');enableImageButtons();};
-   image.onerror=()=>{if(timedOut)return;clearTimeout(timer);failedImage('Anonymous generation is currently unavailable. Try later or connect your own account.');};
-   image.src=u;
+  if(app.imageUrl&&app.imageUrl.startsWith('blob:'))URL.revokeObjectURL(app.imageUrl);
+  const response=await fetch(FLUX_API_URL,{
+   method:'POST',
+   headers:{'Content-Type':'application/json'},
+   body:JSON.stringify({prompt:finalPrompt,width,height,seed,guidance,turnstileToken:token}),
+   signal:controller.signal
+  });
+  if(!response.ok){
+   let message='Image generation failed. Please try again.';
+   try{const data=await response.json();if(data&&data.error)message=data.error;}catch(e){}
+   throw new Error(message);
   }
- }catch(e){failedImage(e.name==='AbortError'?'The request timed out.':e.message);}
- finally{if(auth){$('#guestBtn').disabled=false;$('#authGenBtn').disabled=false;}}
- function failedImage(msg){$('#imageOutput').innerHTML='<div class="empty-state"><div class="empty-art">☁</div><h3>Could not generate</h3><p>Try again later, or use a connected provider.</p></div>';status('imageStatus',msg,'error');$('#guestBtn').disabled=false;$('#authGenBtn').disabled=false;$('#imageDownload').disabled=true;$('#imageOpen').classList.add('hidden');}
+  const type=response.headers.get('content-type')||'';
+  if(!type.includes('image/'))throw new Error('The image service returned an unexpected response.');
+  const blob=await response.blob();
+  if(!blob.size)throw new Error('The model returned an empty image.');
+  app.imageBlob=blob;
+  app.imageUrl=URL.createObjectURL(blob);
+  displayImage(app.imageUrl,'Image generated with FLUX.2 Klein 4B');
+  status('imageStatus','Generated with FLUX.2 Klein 4B · '+width+' × '+height+' · Ready to save.','ok');
+ }catch(e){
+  $('#imageOutput').innerHTML='<div class="empty-state"><div class="empty-art">☁</div><h3>Could not generate</h3><p>Try again in a moment, or check the Cloudflare service configuration.</p></div>';
+  status('imageStatus',e.name==='AbortError'?'The request timed out. Please try again.':e.message,'error');
+ }finally{
+  clearTimeout(timer);
+  resetHumanCheck();
+  $('#guestBtn').disabled=false;
+ }
 }
-function displayImage(u,alt){$('#imageOutput').replaceChildren();const im=document.createElement('img');im.src=u;im.alt=alt;im.loading='eager';$('#imageOutput').appendChild(im);enableImageButtons();}
-function enableImageButtons(){$('#imageDownload').disabled=false;$('#imageOpen').classList.remove('hidden');}
-$('#imageOpen').addEventListener('click',()=>{if(app.imageUrl){window.open(app.imageUrl,'_blank','noopener,noreferrer');}});
-$('#imageDownload').addEventListener('click',async()=>{if(app.imageBlob){saveBlob(app.imageBlob,'digital-works-ai-image.png');return;}if(!app.imageUrl)return;try{const res=await fetch(app.imageUrl);if(!res.ok)throw Error();const blob=await res.blob();saveBlob(blob,'digital-works-ai-image.jpg');}catch(e){window.open(app.imageUrl,'_blank','noopener,noreferrer');toast('Opened image. Long-press to save on mobile.');}});
-function b64url(bytes){return btoa(String.fromCharCode(...bytes)).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');}
-$('#connectBtn').addEventListener('click',async()=>{
- if(app.token){app.token='';sessionStorage.removeItem('dw_polli_token');setConnected();return;}
- try{
-  const verifier=b64url(crypto.getRandomValues(new Uint8Array(32)));
-  const digest=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(verifier));
-  const state=b64url(crypto.getRandomValues(new Uint8Array(16)));
-  sessionStorage.setItem('dw_oauth_verifier',verifier);sessionStorage.setItem('dw_oauth_state',state);
-  const redirect=location.origin+location.pathname;
-  const params=new URLSearchParams({response_type:'code',redirect_uri:redirect,scope:'usage',state:state,code_challenge:b64url(new Uint8Array(digest)),code_challenge_method:'S256',models:'image',expiry:'1',budget:'1'});
-  location.href='https://enter.pollinations.ai/authorize?'+params.toString();
- }catch(e){status('imageStatus','This browser cannot start the secure sign-in flow.','error');}
-});
-async function oauthCallback(){
- const qs=new URLSearchParams(location.search),code=qs.get('code'),err=qs.get('error');
- if(!code&&!err){setConnected();return;}
- history.replaceState(null,'',location.pathname+'#image');showTool('image',false);
- if(err){status('imageStatus','Sign-in cancelled: '+err,'error');return;}
- const verifier=sessionStorage.getItem('dw_oauth_verifier'),state=sessionStorage.getItem('dw_oauth_state');
- sessionStorage.removeItem('dw_oauth_verifier');sessionStorage.removeItem('dw_oauth_state');
- if(!verifier||!state||qs.get('state')!==state){status('imageStatus','Could not verify the login callback.','error');return;}
- try{
-  status('imageStatus','Completing secure Pollinations sign-in...','');
-  const res=await fetch('https://enter.pollinations.ai/api/oauth/token',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({grant_type:'authorization_code',code:code,redirect_uri:location.origin+location.pathname,code_verifier:verifier})});
-  if(!res.ok)throw Error('Token exchange returned '+res.status);
-  const data=await res.json();if(!data.access_token)throw Error('No authorization token provided.');
-  app.token=data.access_token;sessionStorage.setItem('dw_polli_token',app.token);
-  setConnected();status('imageStatus','Connected. Image requests may use your Pollinations balance.','ok');
- }catch(e){status('imageStatus','Could not connect: '+e.message+'. You can still try guest mode.','error');}
-}
-function setConnected(){$('#connectBtn').textContent=app.token?'Disconnect account':'Connect Pollinations';$('#connectBtn').classList.toggle('connected',!!app.token);$('#authGenBtn').disabled=!app.token;}
-oauthCallback();
-
+$('#imageOpen').addEventListener('click',()=>{if(app.imageUrl)window.open(app.imageUrl,'_blank','noopener,noreferrer');});
+$('#imageDownload').addEventListener('click',()=>{if(app.imageBlob)saveBlob(app.imageBlob,'digital-works-flux-image.png');});
 /* Prompt composer */
 const promptData={
  photo:'realistic candid photograph, natural skin textures, authentic details',
