@@ -26,7 +26,6 @@ Required Cloudflare runtime secrets:
 
 | Name | Where to get it |
 | --- | --- |
-| `GEMINI_API_KEY` (not required for the Cloudflare Lyria route) | Not required: Lyria 3.5 uses the existing Cloudflare Workers AI binding |
 | `ELEVENLABS_API_KEY` | ElevenLabs API key on a plan with Music API access |
 | `SONG_STUDIO_PREVIEW_KEY` | A new random private password chosen by the owner |
 
