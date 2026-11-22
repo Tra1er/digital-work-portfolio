@@ -10,6 +10,11 @@
       "name": "IMAGE_RATE_LIMIT",
       "namespace_id": "2026112201",
       "simple": { "limit": 3, "period": 60 }
+    },
+    {
+      "name": "MUSIC_RATE_LIMIT",
+      "namespace_id": "2026112202",
+      "simple": { "limit": 2, "period": 60 }
     }
   ]
 }
