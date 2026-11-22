@@ -76,7 +76,6 @@ Add these under **Workers & Pages → digital-works-ai → Settings → Variable
 
 | Secret name | Purpose |
 | --- | --- |
-| `GEMINI_API_KEY` | Google Gemini API key with Lyria 3.5 API access |
 | `ELEVENLABS_API_KEY` | ElevenLabs API key with Music API access |
 | `SONG_STUDIO_PREVIEW_KEY` | Private owner-only key entered in the Song Studio page |
 
