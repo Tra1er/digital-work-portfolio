@@ -1,4 +1,5 @@
-const MODEL = "@cf/black-forest-labs/flux-2-klein-4b";
+const MODEL_FAST = "@cf/black-forest-labs/flux-2-klein-4b";
+const MODEL_QUALITY = "@cf/black-forest-labs/flux-2-klein-9b";
 const ALLOWED_ORIGIN = "https://tra1er.github.io";
 const ALLOWED_HOSTNAME = "tra1er.github.io";
 const MAX_PROMPT_LENGTH = 1500;
@@ -78,7 +79,7 @@ export default {
       return new Response(JSON.stringify({
         ok: true,
         service: "The Digital Works image API",
-        model: MODEL
+        models: [MODEL_QUALITY, MODEL_FAST]
       }), {
         headers: {
           "Content-Type": "application/json; charset=utf-8",
@@ -121,6 +122,7 @@ export default {
     }
 
     const prompt = typeof body.prompt === "string" ? body.prompt.trim() : "";
+    const model = body.model === "fast" ? MODEL_FAST : MODEL_QUALITY;
     const turnstileToken = typeof body.turnstileToken === "string" ? body.turnstileToken : "";
     const width = Number(body.width);
     const height = Number(body.height);
@@ -154,7 +156,7 @@ export default {
 
     try {
       const serialized = new Response(form);
-      const result = await env.AI.run(MODEL, {
+      const result = await env.AI.run(model, {
         multipart: {
           body: serialized.body,
           contentType: serialized.headers.get("content-type")
@@ -174,7 +176,7 @@ export default {
           "Content-Type": "image/png",
           "Content-Length": String(imageBytes.byteLength),
           "Cache-Control": "no-store",
-          "X-Image-Model": "FLUX.2 Klein 4B"
+          "X-Image-Model": model === MODEL_FAST ? "FLUX.2 Klein 4B" : "FLUX.2 Klein 9B"
         }
       });
     } catch (error) {
