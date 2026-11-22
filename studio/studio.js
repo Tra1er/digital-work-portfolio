@@ -9,6 +9,18 @@ function status(id,msg,type){let el=$('#'+id);if(!el)return;el.textContent=msg;e
 function toast(msg){const e=$('#toast');e.textContent=msg;e.classList.remove('hidden');clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.add('hidden'),3000);}
 async function copy(text){try{await navigator.clipboard.writeText(text);toast('Copied to clipboard');}catch(e){const a=document.createElement('textarea');a.value=text;document.body.appendChild(a);a.select();document.execCommand('copy');a.remove();toast('Copied');}}
 function saveBlob(blob,name){const u=URL.createObjectURL(blob);const a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),3000);}
+function displayImage(url,alt){
+ const output=$('#imageOutput');
+ output.replaceChildren();
+ const image=document.createElement('img');
+ image.src=url;
+ image.alt=alt;
+ image.loading='eager';
+ image.decoding='async';
+ output.appendChild(image);
+ $('#imageDownload').disabled=false;
+ $('#imageOpen').classList.remove('hidden');
+}
 function showTool(id,scroll){if(!toolIds.includes(id))id='image';$$('.tool-view').forEach(el=>el.hidden=el.id!=='view-'+id);$$('[data-tool]').forEach(el=>{let on=el.dataset.tool===id;el.classList.toggle('active',on);el.setAttribute('aria-current',on?'page':'false');});history.replaceState(null,'','#'+id);if(scroll)$('#workspace').scrollIntoView({behavior:'smooth',block:'start'});}
 $$('[data-tool]').forEach(b=>b.addEventListener('click',()=>showTool(b.dataset.tool,true)));
 $$('[data-open]').forEach(b=>b.addEventListener('click',()=>showTool(b.dataset.open,true)));
@@ -45,7 +57,7 @@ async function generateFluxImage(){
  const model=$('#imageModel').value;
  $('#guestBtn').disabled=true;
  $('#imageOutput').innerHTML='<div class="empty-state"><div class="empty-art spin">✦</div><h3>Creating with FLUX.2</h3><p>The image is being generated on Cloudflare GPUs. This can take a little while.</p></div>';
- status('imageStatus','Sending a protected request to FLUX.2 Klein 4B...','');
+ status('imageStatus','Sending a protected request to '+(model==='fast'?'FLUX.2 Klein 4B':'FLUX.2 Klein 9B')+'...','');
  const controller=new AbortController();
  const timer=setTimeout(()=>controller.abort(),120000);
  try{
@@ -68,7 +80,7 @@ async function generateFluxImage(){
   if(!blob.size)throw new Error('The model returned an empty image.');
   app.imageBlob=blob;
   app.imageUrl=URL.createObjectURL(blob);
-  displayImage(app.imageUrl,'Image generated with FLUX.2 Klein 4B');
+  displayImage(app.imageUrl,'Image generated with '+modelLabel);
   status('imageStatus','Generated with '+modelLabel+' · '+width+' × '+height+' · Ready to save.','ok');
  }catch(e){
   $('#imageOutput').innerHTML='<div class="empty-state"><div class="empty-art">☁</div><h3>Could not generate</h3><p>Try again in a moment, or check the Cloudflare service configuration.</p></div>';
