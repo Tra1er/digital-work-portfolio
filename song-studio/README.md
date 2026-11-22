@@ -38,10 +38,20 @@ The prototype page uses the public Turnstile Site Key already configured for `tr
 ### Google Lyria 3.5
 
 - Model: `lyria-3.5`
-- Routed through the existing `env.AI` Cloudflare Workers AI binding using model ID `google/lyria-3.5`.
+- Routed through the existing `env.AI` binding and the Cloudflare AI Gateway using model ID `google/lyria-3.5` (`gateway: { id: "default" }`).
 - Cloudflare documents full-length MP3 songs and currently lists **$0.08 per track**.
-- No free music-generation tier is listed. Existing Workers AI binding avoids creating a separate Gemini API key, but each successful generation is still paid usage.
+- This is a third-party model, not part of the 10,000-neuron free Workers AI allowance. Cloudflare requires AI Gateway Unified Billing and prepaid credits. No free music-generation tier is listed.
+- No separate Gemini API key is needed; Cloudflare manages provider credentials for this route.
 - Duration is supplied as prompt guidance; the model may not honor an exact target duration.
+
+Cloudflare AI Gateway setup before the first paid test:
+1. Deploy the latest Worker code so Lyria calls `env.AI.run(..., { gateway: { id: "default" } })`.
+2. In Cloudflare, open **AI → AI Gateway** and select the **default** gateway (it is created automatically on the first authenticated request if it does not exist).
+3. Open the gateway's **Settings** and set **Workers AI Billing** to **Unified billing**.
+4. Unified Billing requires prepaid credits. Check Cloudflare's displayed minimum top-up and fees before adding any money. Do not generate until you are comfortable with the displayed charge.
+5. One Lyria 3.5 track is currently listed at $0.08; Cloudflare documents a 5% fee on credits purchased through Unified Billing.
+
+Official Cloudflare docs: https://developers.cloudflare.com/ai-gateway/usage/worker-binding-methods/ and https://developers.cloudflare.com/ai-gateway/features/unified-billing/
 
 Official docs: https://ai.google.dev/gemini-api/docs/music-generation  
 Pricing: https://ai.google.dev/gemini-api/docs/pricing/
