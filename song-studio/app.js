@@ -24,19 +24,19 @@ function providerReady(provider) {
 function refreshProviderUI() {
   const lyria = providerReady("lyria");
   const eleven = providerReady("eleven");
-  $("#lyriaState").textContent = lyria ? "Connected" : "Not connected";
+  $("#lyriaState").textContent = lyria ? "AI binding ready" : "Unavailable";
   $("#elevenState").textContent = eleven ? "Connected" : "Not connected";
   $("#lyriaCard").classList.toggle("ready", lyria);
   $("#elevenCard").classList.toggle("ready", eleven);
-  $("#connectionTitle").textContent = lyria || eleven ? "Music provider available" : "Prototype workspace ready";
-  $("#connectionText").textContent = lyria || eleven ? "Private preview access is configured separately." : "Audio editing works now; AI generation awaits provider setup.";
+  $("#connectionTitle").textContent = lyria || eleven ? "Music API binding detected" : "Prototype workspace ready";
+  $("#connectionText").textContent = lyria || eleven ? "A binding is not proof of billing access or a successful song generation." : "Audio editing works now; AI generation awaits provider setup.";
   updateProviderNote();
 }
 function updateProviderNote() {
   const provider = selectedProvider();
   const ready = providerReady(provider);
   if (provider === "lyria") {
-    $("#providerNote").textContent = ready ? "Connected · $0.08 per track · no free generation tier" : "Not connected · $0.08 per track · no free generation tier";
+    $("#providerNote").textContent = ready ? "AI binding ready · generation unverified · paid credits required (~$0.08/track)" : "Lyria unavailable · paid credits required for generation";
   } else {
     $("#providerNote").textContent = ready ? "Connected · paid API access · plan quotas and download limits apply" : "Not connected · paid API access · plan quotas and download limits apply";
   }
@@ -46,7 +46,7 @@ function updateProviderNote() {
   } else if (!ready) {
     setStatus("Add the selected provider's API key to Cloudflare to enable generation.", "");
   } else {
-    setStatus("Ready. Check the paid-usage confirmation and complete the human check before generating.", "success");
+    setStatus("Model binding available, but generation and billing access are NOT verified. Paid Lyria requires AI Gateway credits. Confirm cost before testing.", "");
   }
 }
 async function loadProviderStatus() {
