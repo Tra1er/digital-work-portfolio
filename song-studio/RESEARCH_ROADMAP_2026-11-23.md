@@ -106,9 +106,10 @@ The system must not claim it can automatically extract reliable MIDI from a comp
 - Track creation, mute/solo/pan/gain, synchronized transport, project BPM and time signature.
 - Import WAV/MP3, waveform based on actual samples, drag/split/trim/loop/duplicate/undo clips.
 - WAV export exactly reflects audible arrangement; save/reopen or clearly relink assets.
-- Real playable MIDI tracks: 16-step drum sequencer and piano roll; MIDI-to-audio through Tone.js/sampler.
+- **P1a (first Codex prompt):** Complete the real audio clip editor (import, clip transport, placement, looping, mute/solo/pan, WAV export and save). No MIDI requirement for this first pull request.
+- **P1b (next pull request):** Real playable MIDI tracks: 16-step drum sequencer and piano roll; MIDI-to-audio through Tone.js/sampler. Integrate with the same timeline and export engine.
 - Use 960 ticks per quarter as canonical timeline representation, no accumulated timing drift.
-**Gate:** import a melody, add 8 bars of drums/bass/piano, loop only the drums, alter bass notes, play all together and export a synchronized mix, with no model API calls.
+**Gate:** P1a: import two audio files, move/loop them and export the correct mix. P1b: add 8 bars of drums/bass/piano, loop only the drums, alter bass notes, play all together and export a synchronized mix, with no model API calls.
 
 ### P2 — Smart musical context and local variations (no paid GPU)
 - Song metadata: key/mode, BPM, time signature, section labels, chord changes per bar, track roles, constraints.
@@ -179,9 +180,11 @@ Modal source: https://modal.com/pricing . Set Workspace budget under Usage and B
 
 ## What Codex does next
 
-**Codex Stage 1 (now):** implement P1 with live audio/midi editing and tests. Do not run external APIs, GPUs or spend credits.
+**Codex Stage 1a (now):** implement P1a audio clip editor and tests, following CODEX_HANDOFF.md. No API/GPU spend.
 
-**Codex Stage 2 (after P1):** implement P2 with song context, chords, editable bass/drum/piano variation generation and licensed sounds. Prove it works locally.
+**Codex Stage 1b (after audio timeline passes):** implement P1b MIDI piano roll, drum sequencer, sampler and Tone.js timing, on a separate tested branch.
+
+**Codex Stage 2 (after P1a and P1b):** implement P2 with song context, chords, editable bass/drum/piano variation generation and licensed sounds. Prove it works locally.
 
 **Codex Stage 3 (only with separate explicit owner authorization):** run P3 isolated private benchmark adapter (one short real source-conditioned audio test). Do not deploy or spend automatically.
 
