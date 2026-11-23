@@ -97,3 +97,25 @@ Before any paid run, propose a fixed backing track with known key/chords/BPM and
 ## Hybrid architecture note (2026-11-23)
 
 Follow `song-studio/RESEARCH_ROADMAP_2026-11-23.md` for the current product strategy. **This first task is only P1a, the offline audio clip editor.** The next separate PR is P1b (real playable MIDI, piano roll and step sequencer), then P2 (chord-aware, editable variations), with NO GPU usage in these stages. Do not implement ACE-Step LEGO or launch public generation until a private sound-quality/context benchmark is approved and passes the quality gate. The previously discussed XL Base is a candidate, not a mandatory inference engine.
+
+
+## Explicit two-mode product requirement (2026-11-23)
+
+The product has two distinct creation modes; neither replaces the other:
+
+1. **AI Song Generator:** text/lyrics/reference prompt -> complete song (instrumental or vocals where supported). This is a separate full-song model/provider adapter and separate UX from LEGO. It is a later milestone after P1/P2 and a separately evaluated full-song quality/cost/licence test. ACE-Step may be evaluated for this mode, but it is not yet selected.
+2. **Music Production Studio:** editable multitrack timeline with MIDI/sample/audio tracks and optional context-conditioned AI layers. This is the main DAW workflow.
+
+A full song can later be imported into the Studio. Where a model or licensed stem-separation provider supports it, offer stem separation; do not promise perfect separation or editable MIDI from a mixed audio song. A generated full-song WAV is not automatically separate editable tracks.
+
+**Do not implement either generation mode in P1a.** P1a remains a local audio timeline only; P1b/P2 build MIDI and musical context. Full-song generation and AI layer generation are separate later adapters with separate benchmarks, costs, licences and approval gates.
+
+## Local disk / hardware guardrails for Codex
+
+- Owner's PC has limited free space on C: and wants project files on D:. The owner should open/clone the repository under a path such as D:\AI20Back\digital-work-portfolio and use **Codex Local / This computer** on that folder.
+- Before editing or installing packages, report the repo size, free space on D:, expected dependency/build size and any writes that may still go to C: (Codex app data, Git config/cache, Windows temp, npm cache, WSL/containers).
+- Keep repo, dependencies, generated assets and build output on D: where configurable. Do not install WSL distributions, Docker images, model weights, local inference runtimes or large sample libraries without explicit approval.
+- Prefer the existing Node/browser stack. No Python ML stacks or GPU drivers for P1a/P1b.
+- **Do not use the owner's GPU for AI inference.** The planned editor uses ordinary CPU/browser audio and does not need local ML. Future AI model inference must be remote/cloud only and separately approved.
+- Do not create a second worktree on C:. Use a feature branch in the D: clone if that is the only safe way to keep project data on D:, or ask before creating any worktree elsewhere.
+- A local Codex session still uses the PC for repository files, terminal commands and browser tests. The selected model runs remotely; local CPU/RAM and disk are used by the development tools, not for running GPT inference.
