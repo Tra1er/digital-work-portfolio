@@ -79,3 +79,15 @@ The Digital Works currently has a functioning prototype at \`song-studio/\`, plu
 No Modal deployment; no ACE-Step instrument generation with verified quality; no actual clip-based DAW integration; no audio-to-MIDI editing; no multiuser billing; no public free generation.
 
 The aim is to replace these unknowns with tested, incremental features instead of a pretty but empty shell.
+
+
+## Updated AI model decision (November 23, 2026)
+
+The Stage 2 experiment must not automatically default to ACE-Step LEGO. The latest evaluation plan compares:
+- MixAudio (strong context-following research result, but no public self-hostable weights found; investigate Neutune developer access).
+- Stemphonic (all-at-once synchronized stems; research demo, no ready public inference weights found; reported A100 80GB experiments).
+- MSG-LD / Multi-Track MusicLDM (open research code/checkpoints; four target stems: bass, drums, guitar, piano).
+- MusicGen-Stem (non-commercial license and a reported regeneration bug; not a public-product candidate).
+- STAGE and JEN-1 Composer (narrower/research or external API candidates).
+
+Before any paid run, propose a fixed backing track with known key/chords/BPM and test whether a generated instrument changes appropriately when the context is transposed or its chord progression changes. A model that outputs a nice-sounding isolated WAV but ignores the context has failed our central requirement.
