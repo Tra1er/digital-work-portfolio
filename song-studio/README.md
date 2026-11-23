@@ -128,3 +128,8 @@ The current live Song Studio has a basic **whole-track audio engine**, not an in
 **Cloudflare music provider status disclaimer:** \`lyria.configured=true\` means the Worker has an AI binding; it does **not** establish that prepaid AI Gateway credits, successful music generation or commercial production access are available.
 
 **Recommended immediate next milestone:** offline Stage 1 timeline and audio scheduling, using the first prompt in CODEX_HANDOFF.md. No Modal account or GPU is needed for that milestone. Stage 2 should only be attempted after the owner consents to a private, capped test of ACE-Step LEGO on Modal.
+
+
+## Current research plan
+
+The latest evidence-led decision is in [RESEARCH_ROADMAP_2026-11-23.md](RESEARCH_ROADMAP_2026-11-23.md). It prioritizes an offline audio arranger, then MIDI piano roll and sampled instruments, then chord-aware patterns and variations, before any capped experimental cloud AI stem generation. ACE-Step's LEGO model is **experimental**, not the only planned generation backend.
