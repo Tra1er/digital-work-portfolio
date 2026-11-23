@@ -10,9 +10,10 @@ Build **Song Studio**, a browser-based music production workstation with a real 
 
 1. `song-studio/CODEX_HANDOFF.md` — current work order, priorities and acceptance criteria.
 2. `song-studio/PRODUCT_BLUEPRINT.md` — precise user experience, architecture and data invariants.
-3. `song-studio/ACE_STEP_EVALUATION.md` — model capabilities and required quality gate.
-4. `song-studio/README.md` — current prototype and existing backend.
-5. `cloudflare-worker/README.md` — current Cloudflare setup and security boundaries.
+3. `song-studio/RESEARCH_ROADMAP_2026-11-23.md` — current hybrid MIDI/audio decision, model comparisons, cost safeguards and phased execution.
+4. `song-studio/ACE_STEP_EVALUATION.md` — model capabilities and required quality gate.
+5. `song-studio/README.md` — current prototype and existing backend.
+6. `cloudflare-worker/README.md` — current Cloudflare setup and security boundaries.
 
 ## Do not do these without the owner's explicit approval
 
