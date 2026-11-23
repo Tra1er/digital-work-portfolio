@@ -10,6 +10,15 @@ This means we can already build and test a fun, useful multitrack editor without
 
 Why: the owner tried Scenario's ACE-Step Edit Add Layer and disliked a horn/sax-type result. Reports on ACE-Step's official GitHub include substantial remaining quality and timing problems in LEGO, even after a March 2026 fix to source-audio conditioning.
 
+
+## Two distinct product modes (explicit requirement)
+
+**Mode A — AI Song Generator (full-song generation):** User writes a prompt and optionally lyrics/reference guidance; an AI model generates a complete instrumental song or song with vocals where supported. It is not LEGO and does not automatically give editable instrument stems. This needs its own model/provider benchmark, cost/licence review, and separate UI. ACE-Step's text-to-music capability may be tested for this mode, but no provider has been selected yet.
+
+**Mode B — Music Production Studio (DAW):** User composes and edits a multitrack project: audio clips, MIDI, drum patterns, bass, chords, synths, sampled instruments, effects and mixing. Optional context-conditioned AI can generate individual parts, but each generated take is auditioned and accepted separately.
+
+A completed song from Mode A can be imported into Mode B. If a suitable licensed stem-separation tool is available, the user may split it into audio stems, but separation is not perfect and stems are not the same as editable MIDI. The two modes share the project/audio infrastructure but have distinct generation backends.
+
 ## Owner's actual desired experience
 
 - Start with a melody, chord progression or imported musical sketch.
