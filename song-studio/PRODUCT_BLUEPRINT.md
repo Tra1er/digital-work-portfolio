@@ -153,3 +153,31 @@ Browser (Song Studio)
 - Existing code and deployment boundaries are known.
 - A pure testable arrangement domain model is checked in to \`core/\`.
 - Owner has not been asked to buy cloud infrastructure to perform M1.
+
+
+## Shared song context — required for any AI instrument feature
+
+A collection of separate generated WAVs is not enough. Every generated part must be asked to fit the same underlying composition.
+
+Store a versioned **Song Context** alongside the arrangement:
+- tempo (quarter-note BPM), time signature, key and optional scale;
+- chord progression and chord changes mapped to bars/beats;
+- section map (intro, verse, chorus, bridge, outro) and loop regions;
+- beat/downbeat grid and source tempo confidence;
+- reference audio and/or mix of all currently accepted stems;
+- optional per-instrument reference clip for timbre and playing style;
+- per-generation target role, register, density, activity bars and variation seed.
+
+### AI context protocol
+1. Generate or import a harmonic foundation and define the song's key/chords/tempo.
+2. Construct a context mix from all accepted tracks, aligned to the same bar origin.
+3. Ask the model for one or more missing tracks. Supply the context mix and, if supported, a target-instrument reference recording.
+4. Generate variations without changing the project.
+5. Audition each take against the exact existing arrangement. Check key/chords, timing, instrument identity and whether it improves the mix.
+6. Only after the user accepts a take does it become part of the accepted mix for subsequent generation.
+7. Keep the source and accepted versions so the user can A/B or revert.
+
+A model that only receives a text prompt such as "warm saxophone in deep house" is not guaranteed to match the song. A model that receives audio context may still ignore it; validate with controlled context-swap tests.
+
+### Model selection is open
+ACE-Step LEGO remains a candidate, not a preselected answer. Compare it against context-aware or multi-track candidates documented in \`ACE_STEP_EVALUATION.md\`, including availability, license, VRAM, cost, context-following, supported instruments and real audio quality. Do not build a hard dependency on ACE-Step before this comparison.
