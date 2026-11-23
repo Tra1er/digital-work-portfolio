@@ -12,6 +12,7 @@ The Digital Works currently has a functioning prototype at \`song-studio/\`, plu
 
 - \`AGENTS.md\` — mandatory engineering / safety rules.
 - \`song-studio/PRODUCT_BLUEPRINT.md\` — product flows and feature definitions.
+- `song-studio/RESEARCH_ROADMAP_2026-11-23.md` — **current model selection and staged hybrid MIDI/audio roadmap**. This supersedes any assumption that ACE-Step LEGO is guaranteed.
 - \`song-studio/ACE_STEP_EVALUATION.md\` — real model test gate; read but do not implement paid calls in Stage 1.
 - \`song-studio/core/arrangement.mjs\` and \`arrangement.test.mjs\` — existing pure clip/tick utilities; run \`node --test song-studio/core/arrangement.test.mjs\`.
 - \`song-studio/app.js\` — existing Web Audio editor implementation.
@@ -20,7 +21,7 @@ The Digital Works currently has a functioning prototype at \`song-studio/\`, plu
 
 ## Exact first Codex prompt
 
-> I want you to implement Stage 1 of Song Studio, a real browser-based digital audio workstation. The repo is \`Tra1er/digital-work-portfolio\` and the source lives in \`song-studio/\`. Read \`AGENTS.md\`, \`song-studio/PRODUCT_BLUEPRINT.md\`, \`song-studio/ACE_STEP_EVALUATION.md\`, and this handoff before editing.
+> I want you to implement Stage 1 of Song Studio, a real browser-based digital audio workstation. The repo is \`Tra1er/digital-work-portfolio\` and the source lives in \`song-studio/\`. Read `AGENTS.md`, `song-studio/PRODUCT_BLUEPRINT.md`, `song-studio/RESEARCH_ROADMAP_2026-11-23.md`, `song-studio/ACE_STEP_EVALUATION.md`, and this handoff before editing.
 >
 > Do NOT call an external model API, start a GPU, deploy to Modal, touch Cloudflare billing/secrets, or replace the existing image generator. Work on a separate feature branch/worktree. I do not authorize paid actions or public deployment.
 >
@@ -91,3 +92,8 @@ The Stage 2 experiment must not automatically default to ACE-Step LEGO. The late
 - STAGE and JEN-1 Composer (narrower/research or external API candidates).
 
 Before any paid run, propose a fixed backing track with known key/chords/BPM and test whether a generated instrument changes appropriately when the context is transposed or its chord progression changes. A model that outputs a nice-sounding isolated WAV but ignores the context has failed our central requirement.
+
+
+## Hybrid architecture note (2026-11-23)
+
+Follow `song-studio/RESEARCH_ROADMAP_2026-11-23.md` for the current product strategy. **This first task is only P1a, the offline audio clip editor.** The next separate PR is P1b (real playable MIDI, piano roll and step sequencer), then P2 (chord-aware, editable variations), with NO GPU usage in these stages. Do not implement ACE-Step LEGO or launch public generation until a private sound-quality/context benchmark is approved and passes the quality gate. The previously discussed XL Base is a candidate, not a mandatory inference engine.
