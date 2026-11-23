@@ -248,3 +248,32 @@ First:
 - only then run a tiny, explicitly approved cloud benchmark comparing the best available candidates.
 
 The $30 credit is a testing budget, not proof that a useful model will fit or that a complete production service can be hosted for free.
+
+
+
+## 2026-11-23 research update: cheapest way to verify cumulative-context LEGO
+
+**Important decision:** Do not deploy a paid GPU just to discover whether LEGO fits the user's music. There is a cheaper staged evaluation path.
+
+1. **Scenario's hosted ACE-Step 1.5 "Edit Add Layer"** is documented at https://docs.scenario.com/get-started/generation/audio-generation/audio-generation-academia . It explicitly accepts source audio, an instrument category and prompt, and claims key/tempo/groove matching. "Edit Complete Track" generates fuller accompaniment around a partial recording. Scenario currently advertises 50 daily free credits, but **we have not verified** that these exact audio editing operations are enabled on Free, or that 50 credits cover one test. Confirm the per-run CU cost shown in the app *before* clicking Generate. Scenario's Free plan is personal/evaluation-only and its API is not available on Free.
+2. ACE-Step's upstream group publishes https://github.com/ace-step/ACE-Step-DAW — an existing *work-in-progress* React/Tone.js DAW. Its documented LEGO pipeline is cumulative: drums → bass (hears drums) → guitar (hears drums + bass) → vocals. It claims a timeline, step sequencer, piano roll, effects, MIDI and export. **Actual functional reliability has not been verified.** Review it as an architecture reference before spending time reinventing a DAW. Its licence is **AGPL-3.0-or-later**, with network source-sharing obligations on modified versions. Do not copy its code into a differently licensed commercial project without evaluating those obligations. Architecture ideas are safe to learn from.
+3. **Diff-A-Riff** (Sony CSL Paris, https://sonycslparis.github.io/diffariff-companion/ ) is another researched *context-conditioned* accompaniment model. It demonstrates iterative isolated instrument creation based on the existing mix. This is research, not a verified commercially deployable API/weights option.
+4. **StemGen: A music generation model that listens** (https://julian-parker.github.io/stemgen/ ) also demonstrates iterative instrument stems conditioned on context. It should not be confused with the unrelated stem-separation package named stemgen. Distribution rights, weights and practical cloud inference still require verification.
+5. Meta's **JASCO** conditions generated music on chords, drums and sometimes melody, but generates short mixed clips rather than guaranteed isolated instrument audio; public model weights are non-commercial CC-BY-NC 4.0. Not a safe commercial core model.
+
+### How much is an ACE-Step experiment on Modal?
+
+Modal currently lists **$30 of compute credit per month** on its Starter plan. L40S GPU cost is **$0.000542 per second** (about $1.95/hour), *plus CPU/memory and startup time*.
+
+To illustrate just GPU runtime (not confirmed inference latency):
+- 2-minute GPU session ≈ $0.065 GPU compute
+- 5-minute session ≈ $0.163 GPU compute
+- 10-minute session ≈ $0.325 GPU compute
+
+Do **not** call these "cost per generated song" until we benchmark model loading and each task's true compute time. Four new parts, retries, model downloading, volume storage and cold starts all consume additional resources. The free allowance is limited and pay-as-you-go can apply above it. Before deploying, check account-specific budget/spend limit controls; Modal's official pages are https://modal.com/pricing and https://modal.com/changelog/improved-usage-limits-in-the-dashboard .
+
+### Recommended go/no-go workflow
+
+A. Create a simple rights-cleared **8-bar, 120 BPM, 4/4** backing test sample in the local Song Studio or other licensed source. B. Try Scenario's **Edit Add Layer** on Free only *if* the tool is available, and the displayed cost fits free credits. Generate guitar first; ideally one bass or drum sample next using a new mix of accepted layers. C. Listen for instrument identity, chord agreement, beat alignment and source-audio bleed; record score. D. If the hosted test is unavailable, don't buy Scenario solely for it; use a **single capped Modal experiment** only after owner consent, with pinned ACE-Step Base, one GPU, idle scale-to-zero, and real usage logs. E. If two consecutive high-priority LEGO tests are poor, pause GPU integration and prioritize the browser-only DAW and alternative audio workflows.
+
+The word "context" means audio supplied to the model, not a guarantee of musical compatibility. Even a source-conditioned model can produce off-key or misaligned stems.
